@@ -1,122 +1,177 @@
+<style media="screen">
+  #app, body, html {
+    height: 100%;
+    margin: 0;
+  }
+
+  .side-nav .nav-item a {
+    font-size: 16px;
+    color: #5e6d82;
+    line-height: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    -webkit-transition: all .3s;
+    transition: all .3s
+  }
+
+</style>
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <el-button @click.native="startHacking">Let's do it</el-button>
 
+    <el-menu theme="dark" default-active="1" class="el-menu-demo" mode="horizontal" @select="handleselect">
+      <img src="./assets/logo.png" width="60px">
 
+    </el-menu>
 
+    <el-row>
+      <el-col :span="3">
 
-    <el-form :inline="true" :model="formInline" @click.native.prevent="onSubmit" class="demo-form-inline">
-      <el-form-item>
-        <el-input v-model="formInline.user" placeholder="审批人"></el-input>
-      </el-form-item><el-form-item>
-        <el-select v-model="formInline.region" placeholder="活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-form-item><el-form-item>
-        <el-button type="primary">查询</el-button>
-      </el-form-item>
-    </el-form>
+        <el-menu default-active="2" class="el-menu-vertical-demo side-nav" @open="handleopen" @close="handleclose">
+          <el-submenu index="1">
+            <template slot="title"><i class="el-icon-message"></i>导航一</template>
+            <el-menu-item-group title="分组一">
+              <el-menu-item index="1-1">选项1</el-menu-item>
+              <el-menu-item index="1-2">选项2</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group title="分组2" >
+              <el-menu-item index='df' v-for="item in items" class="nav-item"><a v-bind:href=item>{{ item }}</a> </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-menu-item index="2"><i class="el-icon-menu"></i>导航二</el-menu-item>
+          <el-menu-item index="3"><i class="el-icon-setting"></i>导航三</el-menu-item>
+        </el-menu>
 
+      </el-col>
+      <el-col :span="18">
 
-    <el-button type="text" @click.native="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item>首页</el-breadcrumb-item>
+          <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+          <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+          <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+        </el-breadcrumb>
 
-    <el-dialog title="收货地址" v-model="dialogFormVisible">
+          <h1>{{ msg }}</h1>
+          <el-button @click.native="startHacking">Let's do it</el-button>
 
-          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="活动名称" prop="name">
-              <el-input v-model="ruleForm.name"></el-input>
-            </el-form-item>
-            <el-form-item label="活动区域" prop="region">
-              <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+          <el-form :inline="true" :model="formInline" @click.native.prevent="onSubmit" class="demo-form-inline">
+            <el-form-item>
+              <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+            </el-form-item><el-form-item>
+              <el-select v-model="formInline.region" placeholder="活动区域">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="活动时间">
-              <el-col :span="11">
-                <el-form-item prop="date1">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
-                </el-form-item>
-              </el-col>
-              <el-col class="line" :span="2">-</el-col>
-              <el-col :span="11">
-                <el-form-item prop="date2">
-                  <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
-                </el-form-item>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="即时配送">
-              <el-switch on-text="" off-text="" v-model="ruleForm.delivery"></el-switch>
-            </el-form-item>
-            <el-form-item label="活动性质" prop="type">
-              <el-checkbox-group v-model="ruleForm.type">
-                <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                <el-checkbox label="地推活动" name="type"></el-checkbox>
-                <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-            <el-form-item label="特殊资源" prop="resource">
-              <el-radio-group v-model="ruleForm.resource">
-                <el-radio label="线上品牌商赞助"></el-radio>
-                <el-radio label="线下场地免费"></el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="活动形式" prop="desc">
-              <el-input type="textarea" v-model="ruleForm.desc"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click.native.prevent="handleSubmit">立即创建</el-button>
-              <el-button @click.native.prevent="handleReset">重置</el-button>
+            </el-form-item><el-form-item>
+              <el-button type="primary">查询</el-button>
             </el-form-item>
           </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click.native="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="dialogFormVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
 
 
-    <el-table
-      :data="tableData"
-      @cellclick="cellClick"
-      border
-      style="width: 100%">
+          <el-button type="text" @click.native="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
 
-      <el-table-column
-          inline-template
-          label="操作"
-          width="180"
-          >
-          <el-button-group>
-              <el-button type="primary" size="small">编辑</el-button>
-              <el-button type="primary" size="small">上架</el-button>
-              <el-button type="primary" size="small">下架</el-button>
-          </el-button-group>
-      </el-table-column>
-      <el-table-column
-          property="date"
-          label="日期"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          property="name"
-          label="姓名"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          property="address"
-          label="地址"
+          <el-dialog title="收货地址" v-model="dialogFormVisible">
 
-      </el-table-column>
+                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                  <el-form-item label="活动名称" prop="name">
+                    <el-input v-model="ruleForm.name"></el-input>
+                  </el-form-item>
+                  <el-form-item label="活动区域" prop="region">
+                    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+                      <el-option label="区域一" value="shanghai"></el-option>
+                      <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="活动时间">
+                    <el-col :span="11">
+                      <el-form-item prop="date1">
+                        <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+                      </el-form-item>
+                    </el-col>
+                    <el-col class="line" :span="2">-</el-col>
+                    <el-col :span="11">
+                      <el-form-item prop="date2">
+                        <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
+                      </el-form-item>
+                    </el-col>
+                  </el-form-item>
+                  <el-form-item label="即时配送">
+                    <el-switch on-text="" off-text="" v-model="ruleForm.delivery"></el-switch>
+                  </el-form-item>
+                  <el-form-item label="活动性质" prop="type">
+                    <el-checkbox-group v-model="ruleForm.type">
+                      <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
+                      <el-checkbox label="地推活动" name="type"></el-checkbox>
+                      <el-checkbox label="线下主题活动" name="type"></el-checkbox>
+                      <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
+                    </el-checkbox-group>
+                  </el-form-item>
+                  <el-form-item label="特殊资源" prop="resource">
+                    <el-radio-group v-model="ruleForm.resource">
+                      <el-radio label="线上品牌商赞助"></el-radio>
+                      <el-radio label="线下场地免费"></el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                  <el-form-item label="活动形式" prop="desc">
+                    <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click.native.prevent="handleSubmit">立即创建</el-button>
+                    <el-button @click.native.prevent="handleReset">重置</el-button>
+                  </el-form-item>
+                </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click.native="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click.native="dialogFormVisible = false">确 定</el-button>
+            </span>
+          </el-dialog>
 
-  </el-table>
+
+          <el-table
+            :data="tableData"
+            @cellclick="cellClick"
+            border
+            style="width: 100%">
+
+            <el-table-column
+                inline-template
+                label="操作"
+                width="180"
+                >
+                <el-button-group>
+                    <el-button type="primary" size="small">编辑</el-button>
+                    <el-button type="primary" size="small">上架</el-button>
+                    <el-button type="primary" size="small">下架</el-button>
+                </el-button-group>
+            </el-table-column>
+            <el-table-column
+                property="date"
+                label="日期"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                property="name"
+                label="姓名"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                property="address"
+                label="地址"
+
+            </el-table-column>
+
+        </el-table>
+
+        <table-edit></table-edit>
+
+      </el-col>
+    </el-row>
 
 
-    <table-edit></table-edit>
 
   </div>
 
@@ -127,10 +182,12 @@
 <script>
 
 import tableEdit from "./tableEdit.vue";
+import MainHeader from './header.vue';
 
 export default {
   data () {
     return {
+      items: ['111', '2222', '44444'],
       dialogFormVisible: false,
       formLabelWidth: '40',
       tableData: [{
@@ -214,8 +271,18 @@ export default {
   },
   components:{
     tableEdit: tableEdit,
+    MainHeader: MainHeader,
   },
   methods: {
+    handleopen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleclose(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleselect(key, keyPath) {
+      console.log(key, keyPath);
+    },
     startHacking () {
       this.$notify({
         title: 'It Works',
