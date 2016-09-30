@@ -1,8 +1,4 @@
 <style media="screen">
-  #app, body, html {
-    height: 100%;
-    margin: 0;
-  }
 
   .side-nav .nav-item a {
     font-size: 16px;
@@ -30,7 +26,7 @@
           <el-menu-item index="1-2">选项2</el-menu-item>
         </el-menu-item-group>
         <el-menu-item-group title="分组2" >
-          <el-menu-item index='df' v-for="item in items" class="nav-item"><a v-bind:href=item>{{ item }}</a> </el-menu-item>
+          <el-menu-item :index=item v-for="item in items" class="nav-item"><a v-bind:href=item>{{ item }}</a> </el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-menu-item index="2"><i class="el-icon-menu"></i>导航二</el-menu-item>
@@ -45,8 +41,22 @@
   module.exports = {
     data: function () {
       return {
-        menu: this.$parent.$data.menu || []
+        menu: this.$parent.$data.menu || [],
+        items: ['111', '2222', '44444'],
+
       }
+    },
+    methods: {
+
+      handleopen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleclose(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleselect(key, keyPath) {
+        console.log(key, keyPath);
+      },
     }
   }
 
