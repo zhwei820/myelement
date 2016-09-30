@@ -1,31 +1,43 @@
-<template>
-  <!-- sidebar menu: : style can be found in sidebar.less -->
-  <ul class="sidebar-menu">
-    <li class="header">MAIN NAVIGATION</li>
-    <template v-for="item in menu">
-      <li v-if="item.child" class="treeview" v-link-active>
-        <a v-link="{ path: item.link }">
-          <i class="fa {{ item.icon }}"></i>
-          <span>{{ item.name }}</span>
-          <i v-if="item.child" class="fa fa-angle-left pull-right"></i>
-        </a>
+<style media="screen">
+  #app, body, html {
+    height: 100%;
+    margin: 0;
+  }
 
-        <ul class="treeview-menu">
-          <li v-link-active v-for="child in item.child">
-            <a v-link="{ path: child.link }">
-              <i class="fa {{ child.icon }}"></i> {{ child.name }}
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li v-else v-link-active>
-        <a v-link="{ path: item.link, exact: true }">
-          <i class="fa {{ item.icon }}"></i>
-          <span>{{ item.name }}</span>
-        </a>
-      </li>
-    </template>
-  </ul>
+  .side-nav .nav-item a {
+    font-size: 16px;
+    color: #5e6d82;
+    line-height: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    -webkit-transition: all .3s;
+    transition: all .3s
+  }
+
+</style>
+
+<template>
+  <div class="">
+    <el-menu default-active="2" class="el-menu-vertical-demo side-nav" @open="handleopen" @close="handleclose">
+      <el-submenu index="1">
+        <template slot="title"><i class="el-icon-message"></i>导航一</template>
+        <el-menu-item-group title="分组一">
+          <el-menu-item index="1-1">选项1</el-menu-item>
+          <el-menu-item index="1-2">选项2</el-menu-item>
+        </el-menu-item-group>
+        <el-menu-item-group title="分组2" >
+          <el-menu-item index='df' v-for="item in items" class="nav-item"><a v-bind:href=item>{{ item }}</a> </el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+      <el-menu-item index="2"><i class="el-icon-menu"></i>导航二</el-menu-item>
+      <el-menu-item index="3"><i class="el-icon-setting"></i>导航三</el-menu-item>
+    </el-menu>
+  </div>
+
 </template>
 
 <script>
