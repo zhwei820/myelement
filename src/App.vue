@@ -16,9 +16,10 @@
 <template>
   <div id="app">
 
-    <el-menu theme="dark" default-active="1" class="el-menu-demo" mode="horizontal" >
+    <!-- <el-menu theme="dark" default-active="1" class="el-menu-demo" mode="horizontal" >
       <img src="./assets/logo.png" width="60px">
-    </el-menu>
+    </el-menu> -->
+    <my-header></my-header>
 
     <el-row class="full">
       <el-col :span="3" class="side_bar">
@@ -39,6 +40,7 @@
 
 // import MainHeader from './header.vue';
 import sidebarMenu from './layout/sidebar-menu.vue';
+import myHeader from './layout/header.vue';
 
 export default {
   data () {
@@ -48,6 +50,7 @@ export default {
   },
   components:{
     sidebarMenu: sidebarMenu,
+    myHeader: myHeader,
   },
   methods: {
 
