@@ -21,7 +21,7 @@
 
   <div class="side-bar__header">
     <div class="site-name">
-      <a href="./"><img src="http://www.gravatar.com/avatar/b58f6ebea2155370e2daf60c369616b1"><span class="with-logo">Boilerplate</span></a>
+    	<a href="./"><img src="../assets/logo.png"><span>Adminize</span></a>
     </div>
   </div>
 
