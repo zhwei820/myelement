@@ -1,0 +1,6 @@
+{
+  "name": "adminize-boilerplate",
+  "dependencies": {
+    "adminize": "https://github.com/hivelocityinc/adminize.git"
+  }
+}

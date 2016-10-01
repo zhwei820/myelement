@@ -1,0 +1,5 @@
+{
+  "lib"  : "app/lib",
+  "app"  : "app",
+  "dist" : "dist"
+}

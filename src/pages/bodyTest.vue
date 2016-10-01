@@ -85,7 +85,7 @@
       </el-dialog>
 
 <div class="">
-  
+
   <el-table
     :data="tableData"
     @cellclick="cellClick"
@@ -122,8 +122,6 @@
 </el-table>
 
 </div>
-
-
 
 </div>
 

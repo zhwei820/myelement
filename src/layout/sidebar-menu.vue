@@ -17,22 +17,66 @@
 </style>
 
 <template>
-  <div class="">
-    <el-menu default-active="2" class="el-menu-vertical-demo side-nav" @open="handleopen" @close="handleclose">
-      <el-submenu index="1">
-        <template slot="title"><i class="el-icon-message"></i>导航一</template>
-        <el-menu-item-group title="分组一">
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2" >
-          <el-menu-item :index=item v-for="item in items" class="nav-item"><a v-bind:href=item>{{ item }}</a> </el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-menu-item index="2"><i class="el-icon-menu"></i>导航二</el-menu-item>
-      <el-menu-item index="3"><i class="el-icon-setting"></i>导航三</el-menu-item>
-    </el-menu>
+  <div class="side-bar">
+
+  <div class="side-bar__header">
+    <div class="site-name">
+      <a href="./"><img src="http://www.gravatar.com/avatar/b58f6ebea2155370e2daf60c369616b1"><span class="with-logo">Boilerplate</span></a>
+    </div>
   </div>
+
+
+    <div class="scroll-wrap">
+  	<div class="scroll-content">
+  		<ul class="side-bar__menu">
+  			<li class="side-bar__list">
+  			<div class="parent-title js-side-parent is-open">
+  				<i class="fa fa-flag icon"></i><span>Getting Started</span>
+  			</div>
+  			<ul class="child-menu" style="display: block;">
+  				<li class="child-menu__list"><router-link to="/">Install</router-link> </li>
+  				<li class="child-menu__list"><router-link to="/111">template</router-link> </li>
+  			</ul>
+  			</li>
+  			<li class="side-bar__list">
+  			<div class="parent-title js-side-parent">
+  				<i class="fa fa-star icon"></i><span>Basics</span>
+  			</div>
+  			<ul class="child-menu">
+  				<li class="child-menu__list"><router-link to="/00001">Install1</router-link> </li>
+  				<li class="child-menu__list"><router-link to="/00002">Install2</router-link> </li>
+  				<li class="child-menu__list"><router-link to="/00003">Install3</router-link> </li>
+  				<li class="child-menu__list"><router-link to="/00004">Install4</router-link></li>
+  				<li class="child-menu__list"><router-link to="/00005">Install5</router-link></li>
+  				<li class="child-menu__list"><router-link to="/00006">Install6</router-link></li>
+  				<li class="child-menu__list"><router-link to="/00007">Install7</router-link></li>
+  			</ul>
+  			</li>
+  			<li class="side-bar__list">
+  			<div class="parent-title js-side-parent">
+  				<i class="fa fa-cubes icon"></i><span>Components</span>
+  			</div>
+  			<ul class="child-menu">
+  				<li class="child-menu__list"><router-link to="/0000g">Installq</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000q">Installw</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000w">Installe</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000e">Installr</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000r">Installt</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000t">Instally</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000y">Installu</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000u">Installi</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000i">Installo</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000o">Installg</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000f">Installj</router-link></li>
+  				<li class="child-menu__list"><router-link to="/0000s">Installk</router-link> </li>
+  			</ul>
+  			</li>
+  		</ul>
+  	</div>
+  </div>
+
+
+</div>
 
 </template>
 
@@ -48,15 +92,6 @@
     },
     methods: {
 
-      handleopen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleclose(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleselect(key, keyPath) {
-        console.log(key, keyPath);
-      },
     }
   }
 
