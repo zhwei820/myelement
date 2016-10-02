@@ -23,7 +23,9 @@ import copy
 from .model.UserExtra import UserExtra
 from .model.Menu import Menu
 from .model.AdminUser import AdminUser
+from .model.MenuUser import MenuUser
 from config import global_conf
+from django.views.decorators.csrf import csrf_exempt
 
 
 logger = logging.getLogger('mall_admin')
@@ -37,6 +39,7 @@ def code(request):
     ca.type = 'word'
     return ca.display()
 
+@csrf_exempt
 def user_login(request):
     # 用户登录
     if request.method == 'GET':
@@ -44,27 +47,30 @@ def user_login(request):
     else:
         try:
             result = {"status": 1, "message": ""}
+            print(request.POST)
             code = request.POST.get('code') or ''
             if not code:
                 return JsonResponse({"status": 0, "message": "请填写验证码"})
             ca = Captcha(request)
             if not ca.check(code):
                 return JsonResponse({"status": 0, "message": "验证码错误"})
-            username, password = request.POST['username'], request.POST['password']
+            username, password = request.POST['email'], request.POST['password']
 
             # 验证用户信息有效性
             user = authenticate(username=username, password=password)
+            print(username)
+            print(password)
             if user is not None:
                 if user.is_active:
                     login(request, user)
                     user_role = utils.get_user_role(user.id)
                     result['data'] = {'username':user.username, 'role': user_role}
                     logger.info('%s login' % user.username)
-                    return redirect('/home/')
+                    return JsonResponse({"status": 0, "data": {'email': username, 'logged_in': True}})
                 else:
-                    return JsonResponse({"status": 0, "message": "用户被禁用"})
+                    return JsonResponse({"status": 1, "message": "用户被禁用"})
             else:
-                return JsonResponse({"status": 0, "message": "用户名或密码错误"})
+                return JsonResponse({"status": 1, "message": "用户名或密码错误"})
         except Exception as e:
             print(traceback.format_exc())
             return JsonResponse(RESULT_404)
@@ -397,3 +403,25 @@ def menu_shut(request, id):
     except Exception as e:
         return JsonResponse({"status": 1, "message":"编辑失败"})
     return JsonResponse({"status": 0, "message":"编辑成功"})
+
+def _get_menus(menu_ids):
+    menu_tree = Menu.where(status=1).where(parent_id=0).select().execute().all()
+    menus = Menu.where(status=1).where(Menu.parent_id.__gt__(0)).select().execute().all()
+    print(menu_tree)
+    print()
+    print()
+
+    for item in menu_tree:
+        item['sub'] = []
+        for item1 in menus:
+            if item1['parent_id'] == item['id']:
+                item['sub'].append(item1)
+
+    return menu_tree
+
+@login_required
+def get_menus(request):
+    menus = MenuUser.where(user_id=request.user.id).select().execute().all()
+    menu_ids = [item['m_id'] for item in menus]
+    user_menus = _get_menus(menu_ids)
+    return JsonResponse({"status": 0, "data": user_menus})

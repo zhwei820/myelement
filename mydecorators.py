@@ -21,7 +21,6 @@ def user_pass_func(test_func):
         return _wrapped_view
     return decorator
 
-
 def login_required(function=None):
     """
     Decorator for views that checks that the user is logged in, redirecting

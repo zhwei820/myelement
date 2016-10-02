@@ -21,7 +21,7 @@
 
   <div class="side-bar__header">
     <div class="site-name">
-    	<a href="./"><img src="/dist/logo.png"><span>Adminize</span></a>
+    	<a href="./"><img src="dist/logo.png"><span>Adminize</span></a>
     </div>
   </div>
 

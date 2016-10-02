@@ -14,7 +14,7 @@
         <ul class="user-menu__content">
           <li class="user-menu__list"><a href="#"><i class="fa fa-gear"></i><span>Setting</span></a></li>
           <li class="user-menu__list"><a href="#"><i class="fa fa-question-circle"></i><span>Help</span></a></li>
-          <li class="user-menu__list"><a href="#"><i class="fa fa-sign-out"></i><span>Sign out</span></a></li>
+          <li class="user-menu__list"><a href="#" @click="logout"><i class="fa fa-sign-out" ></i><span>Sign out</span></a></li>
         </ul>
       </div>
     </div>
@@ -23,6 +23,7 @@
 
 
 <script>
+console.log('out');
 export default {
   data () {
     return {}
@@ -30,7 +31,11 @@ export default {
   computed: {},
   ready () {},
   attached () {},
-  methods: {},
+  methods: {
+    logout(){
+      this.$emit('_logged_out');
+    },
+  },
   components: {}
 }
 </script>

@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^update_password/', views.update_password),
     url(r'^update/', views.update_user, name='update'),
     url(r'^user_extra/(\d+)?$', views.user_extra),
+    url(r'^get_menus/', views.get_menus, name='get_menus'),
 
     url(r'^a_user_list/(\d+)?$', views.user_list),
     url(r'^a_user_list_index/', views.user_list_index),
