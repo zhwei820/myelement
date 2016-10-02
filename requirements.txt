@@ -1,0 +1,9 @@
+Django
+dj-database-url
+dj-static
+gunicorn
+Unipath
+python-decouple
+mysqlclient
+skylark
+xlwt

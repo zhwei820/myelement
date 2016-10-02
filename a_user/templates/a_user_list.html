@@ -1,0 +1,352 @@
+{% extends 'base.html' %} {% load staticfiles %} {% load i18n %} {% block title %}管理员管理{% endblock %} {% block head %}
+
+<script src="{% static 'bootstrap-datetimepicker/js/moment.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'bootstrap-table/bootstrap-table.min.css' %}">
+<script src="{% static 'bootstrap-table/bootstrap-table.min.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}">
+
+<script src="{% static 'bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap-validator.js' %}"></script>
+
+<style>
+  .update {
+    color: #333;
+    margin-right: 5px;
+  }
+
+  .remove {
+    color: red;
+    margin-left: 5px;
+  }
+
+  .alert {
+    padding: 0 14px;
+    margin-bottom: 0;
+    display: inline-block;
+  }
+
+</style>
+
+{% endblock head %} {% block main %}
+
+<ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="/a_user/a_user_list_index/">管理员管理</a></li>
+
+</ul>
+<p class="bg-success alert">...</p>
+
+<div class="form-inline">
+
+  <div class="form-group">
+    <label for="">email</label>
+    <input type='text' class="form-control date_time_input" name="email" />
+  </div>
+  <button type="button" class="btn btn-primary permission_update">
+    更新管理员权限
+  </button>
+</div>
+
+<table id="table" data-show-export="true" data-search="true"  data-show-refresh="true"  data-toolbar=".form-inline" data-sort-name="id" data-sort-order="desc" data-row-style="rowStyle" data-pagination="true" data-page-size="10" data-page-list="[10,20]" data-pagination-first-text="First" data-pagination-pre-text="Previous"
+      data-pagination-next-text="Next" data-pagination-last-text="Last" data-query-params="queryParams">
+  <thead>
+    <tr>
+      <th data-field="action" data-align="center" data-formatter="actionFormatter" data-events="actionEvents">操作</th>
+      <th data-sortable="true" data-field="id" width="100">id</th>
+      <th data-sortable="true" data-field="email" width="100">邮箱</th>
+      <th data-sortable="true" data-field="username">用户名</th>
+      <th data-sortable="true" data-field="_is_superuser">超级管理员</th>
+      <th data-sortable="true" data-field="_is_active">状态</th>
+      <th data-sortable="true" data-field="_role">部门</th>
+      <th data-sortable="true" data-field="date_joined">创建时间</th>
+      <th data-sortable="true" data-field="last_login">最后登录时间</th>
+
+    </tr>
+  </thead>
+</table>
+
+<div id="modal_permission" class="modal fade" data-toggle="validator" role="form">
+  <div class="modal-dialog">
+    <form class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+
+      <div class="modal-body">
+
+          <div id="permission">
+
+          </div>
+          <div class="form-group">
+            <label for="">全选</label>
+            <span>&nbsp;</span>
+            <input type="checkbox" name="all_check" value="all_check" id="all_check">
+
+          </div>
+
+          <div class="help-block with-errors"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary submit" >Submit</button>
+      </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<script>
+  var API_URL = 'http://' + location.host + '/a_user/a_user_list/';
+
+  function actionFormatter(value) {
+    return [
+      '<button class="update btn btn-default" href="javascript:" title="Update Item">编辑权限</button>',
+      '<button class="operate btn btn-default" href="javascript:" title="查看详情">查看权限</button>',
+      '<button class="operate1 btn btn-default" href="javascript:" title="Delete Item">恢复</button>',
+      '<button class="operate2 btn btn-default" href="javascript:" title="Delete Item">停用</button>',
+    ].join('');
+  }
+
+  // update and delete events
+  window.actionEvents = {
+    'click .update': function(e, value, row) {
+      showModal($(this).attr('title'), row);
+    },
+    'click .operate': function(e, value, row) {
+      $modal_detail = $("#modal_detail")
+      $modal_detail.modal('show');
+    },
+    'click .operate1': function(e, value, row) {
+      if($(this).hasClass("disabled")){
+          return;
+      }
+      ajax_get(API_URL.substring(0, API_URL.length - 1 - "a_user_list".length) + 'a_user_open/' + row.id)
+    },
+    'click .operate2': function(e, value, row) {
+      if($(this).hasClass("disabled")){
+          return;
+      }
+      ajax_get(API_URL.substring(0, API_URL.length - 1 - "a_user_list".length) + 'a_user_shut/' + row.id)
+    }
+  };
+
+
+  function showAlert(title, type) {
+    $alert = $(".alert");
+    $alert.attr('class', 'alert alert-' + type || 'success')
+      .html('<i class="glyphicon glyphicon-check"></i> ' + title).show();
+    setTimeout(function() {
+      $alert.hide();
+    }, 3000);
+  }
+
+  function rowStyle(row, index) {
+    var classes = ['active', 'success', 'info', 'warning', 'danger', 'table_normal'];
+
+    if (row['ctime'] > '2016') {
+      return {
+        classes: classes[2]
+      };
+    }
+    return {
+      classes: classes[2]
+    };
+  }
+
+$(document).ready(function(){
+    refresh_table();
+    setInterval("refresh_buttons()", 300);
+  })
+
+function refresh_buttons() {
+    $("tr").each(function() {
+        var that = this;
+        $(this).find('td').each(function() {
+            if (this.innerHTML.indexOf("有效") >= 0) {
+                $(that).find(".operate1").addClass('disabled');
+            }
+            if (this.innerHTML.indexOf("失效") >= 0) {
+                $(that).find(".operate2").addClass('disabled');
+            }
+        })
+    })
+}
+</script>
+
+<script src="{% static 'js/table_common.js' %}"></script>
+
+<script>
+
+addEvent(document.querySelector(".permission_update"), 'click', function(e) {
+  ajax_get(API_URL.substring(0, API_URL.length - 1 - "a_user_list".length) + 'a_user_permission_update/')
+});
+
+$(function() {
+  // create event
+  $('.create').click(function() {
+    showModal($(this).text());
+  });
+  $modal_permission = $('#modal_permission'),
+
+  $modal_permission.validator().on('submit', function(e) {
+    if ($modal_permission.data('bs.validator').hasErrors()) {
+      e.preventDefault();
+    } else {
+      e.preventDefault();
+      var row = {};
+
+      $modal_permission.find('input[type!="radio"][type!="checkbox"][name]').each(function() {
+        row[$(this).attr('name')] = $(this).val();
+      });
+
+      $modal_permission.find('select[name] option[title]:selected').each(function() {
+        row[$(this).parent("select").attr('name')] = $(this).val();
+      });
+
+      $modal_permission.find('input[type="radio"][name][title]:checked').each(function() {
+        row[$(this).attr('name')] = $(this).val();
+      });
+
+      $modal_permission.find('input[type="checkbox"]:checked').each(function(){
+        if(!row[$(this).attr('name')]){
+          row[$(this).attr('name')] = [];
+        }
+
+        row[$(this).attr('name')].push($(this).val());
+       });
+
+      $.ajax({
+        url: API_URL + ($modal_permission.data('id') || ''),
+        type: $modal_permission.data('id') ? 'put' : 'post',
+        contentType: 'application/json',
+        data: JSON.stringify(row),
+        success: function(data) {
+          $modal_permission.modal('hide');
+          refresh_table();
+          if (data.status == 0) {
+            showAlert(data.message, 'success');
+          } else {
+            showAlert(data.message, 'danger');
+          }
+        },
+        error: function() {
+          showAlert(($modal_permission.data('id') ? 'Update' : 'Create') + ' item error!', 'danger');
+        }
+      });
+    }
+  });
+});
+
+function showModal(title, row) {
+  row = row || {
+    id: 0
+  }; // default row value
+
+  $modal_permission.data('id', row.id);
+  $modal_permission.find('.modal-title').text(title);
+  for (var name in row) {
+    if(name.startWith('_')){
+      continue;
+    }
+
+    $modal_permission.find('input[type!="radio"][name="' + name + '"]').val(row[name]);
+    $modal_permission.find('select[name="' + name + '"] option[title="' + row[name] + '"]').attr("selected", true);
+    $modal_permission.find('input[type="radio"][name="' + name + '"][title="' + row[name] + '"]').attr("checked", true);
+  }
+
+    $.ajax({
+        url: API_URL.substring(0, API_URL.length - 1 - "a_user_list".length) + 'a_menus/',
+        type: 'get',
+        contentType: 'application/json',
+        success: function(data) {
+            if (typeof(data) != "object") {
+                data = JSON.parse(data);
+                data = sortObjectKeys(data);
+            }
+            $('#permission').empty();
+            for(var key in data) {
+              var snippet = '<div class="form-group">';
+              var name = data[key]['name'];
+              snippet += '<label>' + name + '</label><span>&nbsp;</span>'
+              snippet +=  '<span>&nbsp;</span>';
+              for (var key1 in data[key]['sub']) {
+                snippet += '<label class="checkbox-inline">\
+                    <input type="checkbox" id="permission_' + data[key]['sub'][key1]['id'] + '" name="permission_' + key + '" value="' + data[key]['sub'][key1]['id'] + '"> ' + data[key]['sub'][key1]['name'] + '\
+                  </label>'
+              }
+              snippet += '</div>';
+              $('#permission').append(snippet);
+            }
+            var permission_str = row['extra']['permission_str'];
+            if (typeof(permission_str) != "object") {
+                permission_str = JSON.parse(permission_str);
+                permission_str = sortObjectKeys(permission_str);
+            }
+
+            var menus = permission_str['menu'];
+            for (var key in menus) {
+              for (var key1 in menus[key]['sub']) {
+                $("#permission_" +  menus[key]['sub'][key1]['id']).attr("checked", true);
+              }
+            }
+            update_all_check()
+            $(function(){
+                $("input[type='checkbox']").change(function() {
+                    $modal_permission = $('#modal_permission');
+                    if($(this).val() == $("#all_check").val()){
+                      if($("#all_check:checked").val()){
+                        $modal_permission.find('input[type="checkbox"]').prop("checked", true);
+                      }else {
+                        $modal_permission.find('input[type="checkbox"]').prop("checked", false);
+                      }
+                    }else {
+                      update_all_check()
+                    }
+                });
+            });
+        },
+        error: function() {
+            console.log('error');
+        }
+    });
+  $modal_permission.modal('show');
+}
+
+function update_all_check() {
+  $modal_permission = $('#modal_permission');
+
+  var pflag = 0;
+  var qflag = 0;
+  var counter = 0;
+  $modal_permission.find('input[type="checkbox"][name!="all_check"]').each(function() {
+    if(!$(this).prop('checked')){
+      pflag += 1;
+    }else {
+      qflag += 1;
+    }
+    counter += 1;
+  });
+  if(pflag > 0 && pflag != counter){
+    $modal_permission.find('#all_check').prop("indeterminate", true);
+  }else if(counter == qflag) {
+    $modal_permission.find('#all_check').prop("indeterminate", false);
+    $modal_permission.find('#all_check').prop("checked", true);
+  }else if(counter == pflag) {
+    $modal_permission.find('#all_check').prop("indeterminate", false);
+    $modal_permission.find('#all_check').prop("checked", false);
+  }
+}
+
+</script>
+
+<script type="text/javascript">
+
+</script>
+
+{% endblock main %}
