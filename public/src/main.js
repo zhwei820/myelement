@@ -17,6 +17,7 @@ Vue.http.headers.common['X-CSRFToken'] = getCookie('csrftoken');
 import bodyTest from './pages/bodyTest.vue';
 import banner from './pages/banner.vue';
 import user_list from './pages/user_list.vue';
+import user_group from './pages/user_group.vue';
 
 const router = new VueRouter({
   mode: 'hash',
@@ -24,7 +25,9 @@ const router = new VueRouter({
   routes: [
     { path: '/', component: bodyTest },
     { path: '/banner_list_index_operation', component: banner },
-    { path: '/notification_operation', component: user_list }
+    { path: '/notification_operation', component: user_list },
+    { path: '/channel_stat', component: user_group },
+
   ]
 });
 

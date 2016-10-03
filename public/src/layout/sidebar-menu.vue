@@ -65,10 +65,8 @@
     },
     mounted() {
       this.$http.get('/ends/a_user/get_menus/').then((response) => {
-        if(response.data.status == 0){
-          console.log(response.data.data);
-          this.menus = response.data.data
-        }
+        console.log(response.data);
+        this.menus = response.data
     });
 
     }

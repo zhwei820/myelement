@@ -10,7 +10,7 @@
 
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item >
-          <el-input v-model="formInline.user" placeholder="管理员"></el-input>
+          <el-input v-model="formInline.email" placeholder="email"></el-input>
         </el-form-item>
         <el-form-item>
           <el-select v-model="formInline.is_staff" placeholder="是否是员工">
@@ -185,7 +185,7 @@ export default {
         ]
       },
       formInline: {
-        user: '',
+        email: '',
         is_staff: '',
         date_range: '',
       },

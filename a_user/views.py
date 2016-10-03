@@ -20,13 +20,15 @@ import random
 import traceback
 import json
 import copy
+from .model.Menu import Menu
+
+from .model.UserGroup import UserGroup
 from .model.UserExtra import UserExtra
 from .model.Menu import Menu
 from .model.AdminUser import AdminUser
 from .model.MenuUser import MenuUser
 from config import global_conf
 from django.views.decorators.csrf import csrf_exempt
-
 
 logger = logging.getLogger('mall_admin')
 logger_error = logging.getLogger('mall_admin_error')
@@ -95,7 +97,6 @@ def user_list(request, param):
             query_filter['email'] = request.GET.get('email', '')
             users = User.objects.filter(email__contains=query_filter['email'])
             user_list = utils.objects_to_dict(list(users))
-            print(user_list)
 
             option = {'is_staff': global_conf.yes_no,
                       'is_superuser': global_conf.yes_no,
@@ -344,4 +345,41 @@ def get_menus(request):
     menus = MenuUser.where(user_id=request.user.id).select().execute().all()
     menu_ids = [item['m_id'] for item in menus]
     user_menus = _get_menus(menu_ids)
-    return JsonResponse({"status": 0, "data": user_menus})
+    print(user_menus)
+    return JsonResponse(user_menus, safe = False)
+
+@login_required
+def get_user_group(request):
+    user_group_keys = ['name', 'id']
+    if request.method == 'GET':
+        user_group = UserGroup.select().execute().all()
+        return JsonResponse(user_group, safe = False)
+    elif request.method == "PUT":
+        try:
+            par = utils.get_post_parameter(request, user_group_keys)
+        except Exception as e:
+            print(traceback.format_exc())
+            return JsonResponse({"status": 1, "message":"参数错误"})
+        user_group = UserGroup.where(id=par['id']).select().execute().one()
+        user_group = utils.model_set(user_group, par)
+        try:
+            user_group.save()
+        except Exception as e:
+            print(traceback.format_exc())
+            return JsonResponse({"status": 1, "message":"编辑失败"})
+        return JsonResponse({"status": 0, "message":"编辑成功"})
+    elif request.method == "POST":
+        try:
+            par = utils.get_post_parameter(request, user_group_keys)
+        except Exception as e:
+            print(traceback.format_exc())
+            return JsonResponse({"status": 1, "message":"参数错误"})
+        user_group = UserGroup()
+        user_group.status = 1
+        user_group = utils.model_set(user_group, par)
+        try:
+            user_group.save()
+        except Exception as e:
+            print(traceback.format_exc())
+            return JsonResponse({"status": 1, "message":"新增失败"})
+        return JsonResponse({"status": 0, "message":"新增成功"})
