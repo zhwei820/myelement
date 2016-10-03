@@ -12,7 +12,6 @@ mysql连接管理类
 @author: zh
 """
 import MySQLdb
-import _mysql_exceptions
 import warnings
 import traceback
 import MySQLdb.cursors
@@ -105,11 +104,6 @@ class mmysql_rw:
             self.get_conn(False)
             rslt = self.cur.executemany(sql, args)
             self.db.commit()
-        except (_mysql_exceptions.DatabaseError, _mysql_exceptions.OperationalError, _mysql_exceptions.ProgrammingError) as e:
-            error('got Exception when do sql:%s, (total:%d)args[:5]=%s, e:\n%s', sql, len(args), args[:5], e)
-            self.db.rollback()
-            rslt = 0  # TODO necessary ?
-            raise e
         except StandardError as e:
             info('got StandardError and rollback when do sql:%s, (total:%d)args[:5]=%s, e:\n%s', sql, len(args), args[:5], e)
             self.db.rollback()

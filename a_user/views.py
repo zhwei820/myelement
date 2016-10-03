@@ -14,6 +14,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from config.global_conf import USER_TYPE, RESULT_404, NO_PERMISSION
 from DjangoCaptcha import Captcha
+from skylark import Database
 import utils
 import logging
 import random
@@ -22,7 +23,7 @@ import json
 import copy
 from .model.Menu import Menu
 
-from .model.UserGroup import UserGroup
+from model.pw_model import AuthGroup
 from .model.UserExtra import UserExtra
 from .model.Menu import Menu
 from .model.AdminUser import AdminUser
@@ -345,15 +346,61 @@ def get_menus(request):
     menus = MenuUser.where(user_id=request.user.id).select().execute().all()
     menu_ids = [item['m_id'] for item in menus]
     user_menus = _get_menus(menu_ids)
-    print(user_menus)
     return JsonResponse(user_menus, safe = False)
 
 @login_required
 def get_user_group(request):
     user_group_keys = ['name', 'id']
     if request.method == 'GET':
-        user_group = UserGroup.select().execute().all()
+        user_group = AuthGroup.select().dicts()
+        user_group = utils.pw_objects_to_dict(user_group)
         return JsonResponse(user_group, safe = False)
+    elif request.method == "PUT":
+        try:
+            par = utils.get_post_parameter(request, user_group_keys)
+        except Exception as e:
+            print(traceback.format_exc())
+            return JsonResponse({"status": 1, "message":"参数错误"})
+        user_group = AuthGroup.get(AuthGroup.id==par['id'])
+        user_group = utils.model_set(user_group, par)
+        try:
+            user_group.save()
+        except Exception as e:
+            print(traceback.format_exc())
+            return JsonResponse({"status": 1, "message":"编辑失败"})
+        return JsonResponse({"status": 0, "message":"编辑成功"})
+    elif request.method == "POST":
+        try:
+            par = utils.get_post_parameter(request, user_group_keys)
+        except Exception as e:
+            print(traceback.format_exc())
+            return JsonResponse({"status": 1, "message":"参数错误"})
+        user_group = AuthGroup()
+        user_group = utils.model_set(user_group, par)
+        try:
+            user_group.save()
+        except Exception as e:
+            print(traceback.format_exc())
+            return JsonResponse({"status": 1, "message":"新增失败"})
+        return JsonResponse({"status": 0, "message":"新增成功"})
+
+
+@login_required
+def get_user_group_detail(request):
+    user_group_keys = ['name', 'id']
+    if request.method == 'GET':
+        g_id = request.GET.get('id', '')
+        group_user = Database.execute("SELECT a.id, a.username, b.group_id FROM auth_user a LEFT JOIN `auth_user_groups` b ON a.id = b.user_id;", ()).fetchall()
+        print(group_user)
+        for ii in range(len(group_user)):
+            if group_user[ii]['group_id'] == g_id:
+                group_user[ii]['status'] = 1
+            elif group_user[ii]['group_id']:
+                group_user[ii]['status'] = -1
+            else:
+                group_user[ii]['status'] = 0
+
+        return JsonResponse(group_user, safe = False)
     elif request.method == "PUT":
         try:
             par = utils.get_post_parameter(request, user_group_keys)
@@ -375,7 +422,6 @@ def get_user_group(request):
             print(traceback.format_exc())
             return JsonResponse({"status": 1, "message":"参数错误"})
         user_group = UserGroup()
-        user_group.status = 1
         user_group = utils.model_set(user_group, par)
         try:
             user_group.save()

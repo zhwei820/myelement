@@ -78,6 +78,13 @@ def objects_to_dict(objects):
     else:
         return to_dict(objects)
 
+def pw_objects_to_dict(objects):
+    res = []
+    for object_c in objects:
+        res.append(object_c)
+    return res
+
+
 def cut_long_data(table_data):  # for display in table
     try:
         unit_len = 20

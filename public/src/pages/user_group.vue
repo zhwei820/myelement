@@ -16,7 +16,7 @@
 
       </el-form>
 
-      <el-dialog title="" v-model="dialogFormVisible">
+      <el-dialog title="分组管理" v-model="dialogFormVisible">
 
           <el-form :model="userGroupForm" ref="userGroupForm" label-width="100px" >
             <el-form-item label="分组名称" prop="email">
@@ -25,7 +25,29 @@
 
               <el-input type="hidden" v-model="userGroupForm.id"></el-input>
 
-              <el-button type="primary" @click.native.prevent="handleSubmit">创建</el-button>
+              <el-button type="primary" @click.native.prevent="handleSubmit">提交</el-button>
+              <el-button @click.native.prevent="handleReset">重置</el-button>
+            </el-form-item>
+          </el-form>
+
+      </el-dialog>
+
+      <el-dialog title="分组成员" v-model="groupUserFormVisible">
+
+          <el-form :model="groupUserForm" ref="groupUserForm" label-width="100px" >
+            <el-form-item label="分组名称" prop="email">
+              <el-input v-model="groupUserForm.name"></el-input>
+            </el-form-item>
+
+            <el-form-item label="用户" prop="type">
+              <el-checkbox-group v-model="groupUserForm.user_id">
+                <el-checkbox :label="user.id" name="user_id" v-for="user in groupUserForm.users">{{ user.name }}</el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+
+              <el-input type="hidden" v-model="groupUserForm.id"></el-input>
+
+              <el-button type="primary" @click.native.prevent="handleSubmit">提交</el-button>
               <el-button @click.native.prevent="handleReset">重置</el-button>
             </el-form-item>
           </el-form>
@@ -44,8 +66,8 @@
             >
             <el-button-group>
                 <el-button type="primary" size="small">编辑</el-button>
-                <el-button type="primary" size="small">上架</el-button>
-                <el-button type="primary" size="small">下架</el-button>
+                <el-button type="primary" size="small">查看/编辑成员</el-button>
+                <el-button type="primary" size="small">查看/编辑权限</el-button>
             </el-button-group>
         </el-table-column>
         <el-table-column
@@ -83,12 +105,19 @@ export default {
   data () {
     return {
       dialogFormVisible: false,
+      groupUserFormVisible: false,
       formLabelWidth: '40',
       tableData: [],
       userGroupForm: {
         name: '',
         id: '',
       },
+      groupUserForm: {
+        name: '',
+        users: [],
+        user_id: [],
+      },
+      user_list: [{'name': 'zw', 'id': 1, 'group_id': 1},],
       rules: {
         name: [
           { required: true, message: '请输入分组名称', trigger: 'change' }
@@ -98,7 +127,6 @@ export default {
       formInline: {
         name: '',
       },
-
        current_page: 1,
        total_page: 1,
        per_page: 100,
@@ -157,8 +185,25 @@ export default {
           name: row.name,
           id: row.id,
         };
-      }else if(button_text == '上架') {
-
+      }else if(button_text == '查看/编辑成员') {
+        this.groupUserFormVisible = true;
+        this.$http.get('/ends/a_user/get_user_group_detail/', {params: {'id': row.id}}).then((response) => {
+          if(response.data.status > 0){
+            this.error_message = response.data.message;
+          }else {
+            this.groupUserForm = {
+              name: row.name,
+              id: row.id,
+              users: response.data,
+              user_id: [],
+            };
+            for (var i = 0; i < this.groupUserForm.users.length; i++) {
+              if(this.groupUserForm.users['group_id'] == row.id){
+                this.groupUserForm.user_id.push(this.groupUserForm.users['id']);
+              }
+            }
+          }
+        });
       }else if (button_text == '下架') {
 
       }

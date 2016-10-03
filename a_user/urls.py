@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^user_extra/(\d+)?$', views.user_extra),
     url(r'^get_menus/', views.get_menus, name='get_menus'),
     url(r'^get_user_group/', views.get_user_group, name='get_user_group'),
+    url(r'^get_user_group_detail/', views.get_user_group_detail, name='get_user_group_detail'),
 
     url(r'^a_user_list/(\d+)?$', views.user_list),
     url(r'^a_user_list_index/', views.user_list_index),
