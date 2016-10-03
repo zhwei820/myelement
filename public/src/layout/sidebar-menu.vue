@@ -28,48 +28,19 @@
     <div class="scroll-wrap">
   	<div class="scroll-content">
   		<ul class="side-bar__menu">
-  			<li class="side-bar__list">
-  			<div class="parent-title js-side-parent is-open">
-  				<i class="fa fa-flag icon"></i><span>Getting Started</span>
-  			</div>
-  			<ul class="child-menu" style="display: block;">
-  				<li class="child-menu__list"><router-link to="/">Install</router-link> </li>
-  				<li class="child-menu__list"><router-link to="/111">template</router-link> </li>
-  			</ul>
+
+  			<li class="side-bar__list" v-for="item in menus">
+          <div class="parent-title js-side-parent">
+            <i class="fa fa-star icon"></i><span>{{ item.name }}</span>
+          </div>
+          <ul class="child-menu">
+            <li class="child-menu__list" v-for="menu in item.sub">
+              <router-link :to="menu.route_url">{{ menu.name }}</router-link>
+            </li>
+
+          </ul>
   			</li>
-  			<li class="side-bar__list">
-  			<div class="parent-title js-side-parent">
-  				<i class="fa fa-star icon"></i><span>Basics</span>
-  			</div>
-  			<ul class="child-menu">
-  				<li class="child-menu__list"><router-link to="/00001">Install1</router-link> </li>
-  				<li class="child-menu__list"><router-link to="/00002">Install2</router-link> </li>
-  				<li class="child-menu__list"><router-link to="/00003">Install3</router-link> </li>
-  				<li class="child-menu__list"><router-link to="/00004">Install4</router-link></li>
-  				<li class="child-menu__list"><router-link to="/00005">Install5</router-link></li>
-  				<li class="child-menu__list"><router-link to="/00006">Install6</router-link></li>
-  				<li class="child-menu__list"><router-link to="/00007">Install7</router-link></li>
-  			</ul>
-  			</li>
-  			<li class="side-bar__list">
-  			<div class="parent-title js-side-parent">
-  				<i class="fa fa-cubes icon"></i><span>Components</span>
-  			</div>
-  			<ul class="child-menu">
-  				<li class="child-menu__list"><router-link to="/0000g">Installq</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000q">Installw</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000w">Installe</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000e">Installr</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000r">Installt</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000t">Instally</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000y">Installu</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000u">Installi</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000i">Installo</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000o">Installg</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000f">Installj</router-link></li>
-  				<li class="child-menu__list"><router-link to="/0000s">Installk</router-link> </li>
-  			</ul>
-  			</li>
+
   		</ul>
   	</div>
   </div>
@@ -84,12 +55,21 @@
   module.exports = {
     data: function () {
       return {
-        menu: this.$parent.$data.menu || [],
+        menus: [],
         items: ['111', '2222', '44444'],
 
       }
     },
     methods: {
+
+    },
+    mounted() {
+      this.$http.get('/ends/a_user/get_menus/').then((response) => {
+        if(response.data.status == 0){
+          console.log(response.data.data);
+          this.menus = response.data.data
+        }
+    });
 
     }
   }

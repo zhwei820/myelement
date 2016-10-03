@@ -36,7 +36,11 @@ module.exports = {
         query: {
           name: '[name].[ext]?[hash]'
         }
-      }
+      },
+      {
+        test: require.resolve('jquery'),
+        loader: 'expose?jQuery'
+      },
     ]
   },
   devServer: {

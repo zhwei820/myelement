@@ -128,7 +128,6 @@
 </template>
 
 <script>
-import tableEdit from "../tableEdit.vue";
 
 export default {
   data () {
@@ -274,7 +273,6 @@ export default {
     },
   },
   components: {
-    tableEdit: tableEdit,
 
   }
 };

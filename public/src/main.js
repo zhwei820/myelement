@@ -15,13 +15,14 @@ Vue.use(VueRouter);
 Vue.http.headers.common['X-CSRFToken'] = getCookie('csrftoken');
 
 import bodyTest from './pages/bodyTest.vue';
+import banner from './pages/banner.vue';
 
 const router = new VueRouter({
   mode: 'hash',
   base: __dirname,
   routes: [
     { path: '/', component: bodyTest },
-    { path: '/foo', component: bodyTest },
+    { path: '/banner_list_index_operation', component: banner },
     { path: '/bar', component: bodyTest }
   ]
 });

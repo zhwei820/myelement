@@ -32,7 +32,6 @@ import myHeader from './layout/header.vue';
 import login from './pages/login.vue';
 
 var user_info = localStorage.getItem('user');
-console.log(user_info);
 export default {
   data () {
     return {
@@ -46,11 +45,13 @@ export default {
     sidebarMenu: sidebarMenu,
     myHeader: myHeader,
     login: login,
+
   },
   methods: {
     do_login(user_data) {
       this.user_data = user_data;
       localStorage.setItem('user', JSON.stringify(this.user_data))
+      location.href = '/'
     },
     do_logout() {
       this.user_data.logged_in = false;

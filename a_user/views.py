@@ -415,6 +415,7 @@ def _get_menus(menu_ids):
         item['sub'] = []
         for item1 in menus:
             if item1['parent_id'] == item['id']:
+                item1['route_url'] = '/' + item1['action'] + '_' + item1['type']
                 item['sub'].append(item1)
 
     return menu_tree

@@ -9,7 +9,7 @@
 <div class="page-login height_100" >
   <div class="login">
     <div class="login__head">
-      <h1 class="login__title"><i class="fa fa-sign-in"></i><span>Sign in to Dashboard</span></h1></div>
+      <h1 class="login__title"><i class="fa fa-sign-in"></i><span>Sign in</span></h1></div>
     <div class="login__body">
       <form class="" action="/" method="post">
 
