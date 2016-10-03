@@ -58,8 +58,6 @@ def user_login(request):
 
             # 验证用户信息有效性
             user = authenticate(username=username, password=password)
-            print(username)
-            print(password)
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -87,84 +85,9 @@ def user_logout(request):
             return JsonResponse(RESULT_404)
 
 @login_required
-def add_user(request):
-    # 添加用户
-    if request.method == 'POST':
-        try:
-            result = {"status": 1, "message": ""}
-            # 判断用户是否有权限增加用户(平台用户可以增加平台和商家两种用户,商家用户不可以增加用户)
-            # if not utils.check_permission(request, "add_user"):
-            #     return JsonResponse(NO_PERMISSION)
-            email, role, username, password = request.POST['email'], request.POST['role'], request.POST['username'], request.POST['password']
-            # 判断邮箱是否已经被使用
-            if User.objects.filter(email = email):
-                return JsonResponse({"status": 0, "message":"email重复"})
-
-            if not USER_TYPE.has_key(role):
-                return JsonResponse({"status": 0, "message":"平台错误"})
-
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
-
-            user_extra = UserExtra.at(user.id).getone()
-            user_extra.role = role
-            user_extra.save()
-
-            return JsonResponse(result)
-        except Exception as e:
-            logger_error.error(e)
-            print(traceback.format_exc())
-            return JsonResponse(RESULT_404)
-    else:
-        return render(request, 'signup.html', {'role_option' : [{'name': '平台', 'role':'1'}, {'name': '商家', 'role': '2'}]})
-
-@login_required
-def update_password(request):
-    if request.method == 'POST':
-        try:
-            result = {"status": 1, "message": ""}
-            password, password1, password2 = request.POST['password'], request.POST['password1'], request.POST['password2']
-            # 验证原密码
-            user = request.user
-            if user.check_password(password):
-                if not (password1 and password2):
-                    return JsonResponse({"status": 0, "message":"新密码为空"})
-                if password1 != password2:
-                    return JsonResponse({"status": 0, "message":"新密码和旧密码相同"})
-                user.set_password(password1)
-                user.save()
-                return JsonResponse(result)
-            else:
-                return JsonResponse({"status": 0, "message":"旧密码错误"})
-        except Exception as e:
-            return JsonResponse(RESULT_404)
-
-@login_required
-def update_user(request):
-    if request.method == 'POST':
-        try:
-            result = {"status": 1, "message": ""}
-            if request.user.is_superuser != 1:
-                return JsonResponse(NO_PERMISSION)
-            if not (request.POST['user_id'] and request.POST['username'] and \
-                    request.POST['account']):
-                return JsonResponse({"status": 0, "message":"no userid or username or account"})
-            user = User.objects.get(id=request.POST['user_id'])
-            user.first_name = request.POST['username']
-            user.username = request.POST['account']
-            if request.POST.get('password',''):
-                user.set_password(request.POST['password'])
-            user.save()
-            return JsonResponse(result)
-        except Exception as e:
-            logger_error.error(e)
-            return JsonResponse(RESULT_404)
-
-
-@login_required
 def user_list(request, param):
     permission_keys = ['permission_1', 'permission_2', 'permission_3', 'permission_4', 'permission_20']
-    if not utils.check_permission(request.user.extra, 'a_user_list_index'):
+    if not utils.check_permission(request.user, 'a_user_list_index'):
         return JsonResponse(NO_PERMISSION)
     if request.method == 'GET':
         try:
@@ -172,12 +95,11 @@ def user_list(request, param):
             query_filter['email'] = request.GET.get('email', '')
             users = User.objects.filter(email__contains=query_filter['email'])
             user_list = utils.objects_to_dict(list(users))
-            for ii in range(len(user_list)):
-                user_list[ii]['extra'] = utils.objects_to_dict(users[ii].extra)
-                user_list[ii]['role'] = user_list[ii]['extra']['role']
-            option = {'is_staff': global_conf.true_false,
-                      'is_superuser': global_conf.true_false,
-                      'is_active': global_conf.true_false_status,
+            print(user_list)
+
+            option = {'is_staff': global_conf.yes_no,
+                      'is_superuser': global_conf.yes_no,
+                      'is_active': global_conf.public_status,
                       'role': global_conf.admin_role,
                       }
             user_list = utils.prepare_table_data(user_list, option)
@@ -407,9 +329,6 @@ def menu_shut(request, id):
 def _get_menus(menu_ids):
     menu_tree = Menu.where(status=1).where(parent_id=0).select().execute().all()
     menus = Menu.where(status=1).where(Menu.parent_id.__gt__(0)).select().execute().all()
-    print(menu_tree)
-    print()
-    print()
 
     for item in menu_tree:
         item['sub'] = []

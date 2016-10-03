@@ -17,14 +17,14 @@ yes_no = {
     '1' : '是'
 }
 
-true_false = {
-    'False' : '否',
-    'True' : '是'
-}
-true_false_status = {
-    'False' : '失效',
-    'True' : '<span class="green">有效</span>'
-}
+# true_false = {
+#     'False' : '否',
+#     'True' : '是'
+# }
+# true_false_status = {
+#     'False' : '失效',
+#     'True' : '<span class="green">有效</span>'
+# }
 public_status = {
     '0' : '失效',
     '1' : '<span class="green">有效</span>'

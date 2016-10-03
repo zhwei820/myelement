@@ -25,25 +25,20 @@ from datetime import date
 from config import global_conf
 from config.global_conf import PAGE_CAPACITY
 from a_user.model.Menu import Menu
+from a_user.model.MenuUser import MenuUser
+
 from django.conf import settings
 
 from third.export_excel import ExcelResponse
 from mysite.lib.mysql_manager_rw import mmysql_rw
 
-def check_permission(user_extra, action):
+def check_permission(user, action):
     menu = Menu.where(status=1, action=action).select().execute().one()
-    try:
-        permission = json.loads(user_extra.permission_str)
-        # print(permission)
-        # print(menu)
-        for item in permission['menu']:
-            if str(item['id']) == str(menu['parent_id']):
-                for v in item['sub']:
-                    if str(v['id']) == str(menu['id']):
-                        return True
-        return False
-    except Exception as e:
-        return False
+    permission = MenuUser.where(user_id=user.id).where(m_id=menu['id']).select().execute().one()
+    print(menu)
+    print(permission)
+    return True if permission else False
+
 
 def get_user_role(user_id):
     m = mmysql_rw()
@@ -72,6 +67,8 @@ def objects_to_dict(objects):
                 dict_cc[key] = item.strftime('%Y-%m-%d %H:%M:%S')
             elif isinstance(item, date):
                 dict_cc[key] = item.strftime('%Y-%m-%d')
+            elif isinstance(item, bool):
+                dict_cc[key] = '1' if item else '0'
         return dict_cc
     if isinstance(objects, list):
         res = []

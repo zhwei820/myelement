@@ -17,9 +17,10 @@
           :title="error_message"
           type="warning">
         </el-alert>
-        <div class="login__list"><label for="name" class="login__label">用户名</label><input type="email" v-model="user.email" placeholder="email" class="input--full" autocomplete="on"></div>
-        <div class="login__list"><label for="password" class="login__label">密码</label><input type="password" v-model="user.password" placeholder="Password"  class="input--full" autocomplete="on"></div>
-        <div class="login__list"><label for="password" class="login__label">验证码</label><input type="text" v-model="user.code" placeholder="" class="input--full"> <img src="/ends/a_user/code/?a" onclick="this.src=this.src + '&' + Math.random()"></img> </div>
+
+        <div class="login__list"><label for="name" class="login__label">用户名</label><el-input v-model="user.email"></el-input></div>
+        <div class="login__list"><label for="password" class="login__label">密码</label><el-input v-model="user.password" type='password'></div>
+        <div class="login__list"><label for="password" class="login__label">验证码</label> <el-input v-model="user.code"></el-input> <img src="/ends/a_user/code/?a" onclick="this.src=this.src + '&' + Math.random()"></img> </div>
 
       </form>
 

@@ -13,9 +13,9 @@
           <el-input v-model="formInline.user" placeholder="管理员"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.region" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+          <el-select v-model="formInline.is_staff" placeholder="是否是员工">
+            <el-option label="是员工" value="1"></el-option>
+            <el-option label="不是员工" value="0"></el-option>
           </el-select>
         </el-form-item>
 
@@ -45,10 +45,10 @@
             <el-form-item label="账号" prop="email">
               <el-input v-model="adminUserForm.email"></el-input>
             </el-form-item>
-            <el-form-item label="活动区域" prop="region">
-              <el-select v-model="adminUserForm.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+            <el-form-item label="是否是员工" prop="is_staff">
+              <el-select v-model="adminUserForm.is_staff" placeholder="是否是员工">
+                <el-option label="是员工" value="1"></el-option>
+                <el-option label="不是员工" value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="加入时间">
@@ -59,26 +59,28 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item label="有效">
-              <el-switch on-text="" off-text="" v-model="adminUserForm.delivery"></el-switch>
+              <el-switch on-text="" off-text="" v-model="adminUserForm.is_active"></el-switch>
             </el-form-item>
             <el-form-item label="用户tag" prop="type">
               <el-checkbox-group v-model="adminUserForm.type">
-                <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                <el-checkbox label="地推活动" name="type"></el-checkbox>
-                <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
+                <el-checkbox label="foods" name="type">美食/餐厅线上活动</el-checkbox>
+                <el-checkbox label="offline1" name="type">地推活动</el-checkbox>
+                <el-checkbox label="offline2" name="type">线下主题活动</el-checkbox>
+                <el-checkbox label="brand" name="type">单纯品牌曝光</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="特殊资源" prop="resource">
-              <el-radio-group v-model="adminUserForm.resource">
-                <el-radio label="线上品牌商赞助"></el-radio>
-                <el-radio label="线下场地免费"></el-radio>
+            <el-form-item label="超级管理员" prop="is_superuser">
+              <el-radio-group v-model="adminUserForm.is_superuser">
+                <el-radio label="1" >是</el-radio>
+                <el-radio label="0" >否</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="活动textarea" prop="desc">
               <el-input type="textarea" v-model="adminUserForm.desc"></el-input>
             </el-form-item>
             <el-form-item>
+              <el-input type="hidden" v-model="adminUserForm.desc"></el-input>
+
               <el-button type="primary" @click.native.prevent="handleSubmit">创建</el-button>
               <el-button @click.native.prevent="handleReset">重置</el-button>
             </el-form-item>
@@ -153,20 +155,20 @@ export default {
       formLabelWidth: '40',
       tableData: [],
       adminUserForm: {
-        name: '',
-        region: '',
+        email: '',
+        is_staff: '',
         ctime: '',
-        delivery: false,
+        is_active: false,
         type: [],
-        resource: '',
+        is_superuser: '',
         desc: ''
       },
       rules: {
         email: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' }
+          { required: true, message: '请输入活动名称', trigger: 'change' }
         ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
+        is_staff: [
+          { required: true, message: '请选择是否是员工', trigger: 'change' }
         ],
         ctime: [
           { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
@@ -174,16 +176,16 @@ export default {
         type: [
           { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
         ],
-        resource: [
+        is_superuser: [
           { required: true, message: '请选择活动资源', trigger: 'change' }
         ],
         desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
+          { required: true, message: '请填写活动形式', trigger: 'change' }
         ]
       },
       formInline: {
         user: '',
-        region: '',
+        is_staff: '',
         date_range: '',
       },
 
@@ -217,7 +219,6 @@ export default {
        current_page: 1,
        total_page: 1,
        per_page: 100,
-
     }
   },
   computed: {},
@@ -232,8 +233,14 @@ export default {
     handleSubmit(ev) {
       this.$refs.adminUserForm.validate((valid) => {
         if (valid) {
-          alert('submit!');
           console.log(this.adminUserForm);
+          this.$http.post('/ends/a_user/a_user_list/', this.adminUserForm).then((response) => {
+            if(response.data.status > 0){
+              this.error_message = response.data.message;
+            }else {
+              this.onSearch();
+            }
+          });
         } else {
           console.log('error submit!!');
           return false;
@@ -245,10 +252,11 @@ export default {
         if(response.data.status > 0){
           this.error_message = response.data.message;
         }else {
-          console.log(response.data);
           this._tableData = response.data;
-          this.total_page = this._tableData.length
-          this.tableData = this._tableData.slice(0, this.per_page)
+          if(this._tableData[0]){
+            this.total_page = this._tableData.length
+            this.tableData = this._tableData.slice(0, this.per_page)
+          }
         }
       });
     },
@@ -256,15 +264,14 @@ export default {
       var button_text = event.toElement.innerText;
       if(button_text == '编辑'){
         this.dialogFormVisible = true;
-
         this.adminUserForm = {
-          email: 'zw@mysite.com',
-          region: 'shanghai',
-          delivery: false,
-          ctime: '2016-05-05',
-          type: [],
-          resource: '',
-          desc: ''
+          email: row.email,
+          is_staff: row.is_staff,
+          is_active: row.is_active == '1',
+          ctime: row.date_joined,
+          type: ['foods', 'brand'],
+          is_superuser: row.is_superuser,
+          desc: 'me'
         };
 
       }else if(button_text == '上架') {
