@@ -50,10 +50,10 @@ def user_login(request):
             print(request.POST)
             code = request.POST.get('code') or ''
             if not code:
-                return JsonResponse({"status": 0, "message": "请填写验证码"})
+                return JsonResponse({"status": 1, "message": "请填写验证码"})
             ca = Captcha(request)
             if not ca.check(code):
-                return JsonResponse({"status": 0, "message": "验证码错误"})
+                return JsonResponse({"status": 1, "message": "验证码错误"})
             username, password = request.POST['email'], request.POST['password']
 
             # 验证用户信息有效性
@@ -66,7 +66,7 @@ def user_login(request):
                     user_role = utils.get_user_role(user.id)
                     result['data'] = {'username':user.username, 'role': user_role}
                     logger.info('%s login' % user.username)
-                    return JsonResponse({"status": 0, "data": {'email': username, 'logged_in': True}})
+                    return JsonResponse({"status": 0, "data": {'email': username, 'password': password, 'logged_in': True}})
                 else:
                     return JsonResponse({"status": 1, "message": "用户被禁用"})
             else:

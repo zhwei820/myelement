@@ -18,7 +18,7 @@
       </div>
     </div>
     <div v-else='user_data.logged_in' class="height_100" >
-      <login v-on:_logged_in="do_login"></login>
+      <login v-on:_logged_in="do_login" :user_data='user_data'></login>
 
     </div>
 
@@ -50,13 +50,11 @@ export default {
   methods: {
     do_login(user_data) {
       this.user_data = user_data;
-      localStorage.setItem('user', JSON.stringify(user_data))
+      localStorage.setItem('user', JSON.stringify(this.user_data))
     },
     do_logout() {
-      this.user_data = {
-        logged_in: false,
-      };
-      localStorage.setItem('user', '')
+      this.user_data.logged_in = false;
+      localStorage.setItem('user', JSON.stringify(this.user_data))
     },
 
   }

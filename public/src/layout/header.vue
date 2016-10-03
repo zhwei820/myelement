@@ -23,7 +23,6 @@
 
 
 <script>
-console.log('out');
 export default {
   data () {
     return {}
