@@ -377,6 +377,7 @@ def get_user_group(request):
             return JsonResponse({"status": 1, "message":"参数错误"})
         user_group = AuthGroup()
         user_group = utils.model_set(user_group, par)
+        user_group.id = None
         try:
             user_group.save()
         except Exception as e:

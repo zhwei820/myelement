@@ -110,7 +110,7 @@ export default {
       tableData: [],
       userGroupForm: {
         name: '',
-        id: '',
+        id: 0,
       },
       groupUserForm: {
         name: '',
@@ -155,6 +155,7 @@ export default {
             if(response.data.status > 0){
               this.error_message = response.data.message;
             }else {
+              this.dialogFormVisible = false;
               this.onSearch();
             }
           });
@@ -212,7 +213,7 @@ export default {
       this.dialogFormVisible = true;
       this.userGroupForm = {
         name: '',
-        id: '',
+        id: 0,
       };
     },
     handleSizeChange(val) {
