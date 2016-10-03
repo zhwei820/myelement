@@ -122,6 +122,7 @@
         <el-table-column
             property="date_joined"
             label="加入日期"
+            >
         </el-table-column>
         <el-table-column
             property="last_login"
