@@ -17,6 +17,5 @@ exports.getCookie = function(name) {
           }
       }
   }
-  console.log(cookieValue);
   return cookieValue;
 };

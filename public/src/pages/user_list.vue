@@ -4,13 +4,13 @@
 
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>首页</el-breadcrumb-item>
-        <el-breadcrumb-item>运营</el-breadcrumb-item>
-        <el-breadcrumb-item>banner管理</el-breadcrumb-item>
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+        <el-breadcrumb-item>管理员管理</el-breadcrumb-item>
       </el-breadcrumb>
 
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item >
-          <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+          <el-input v-model="formInline.user" placeholder="管理员"></el-input>
         </el-form-item>
         <el-form-item>
           <el-select v-model="formInline.region" placeholder="活动区域">
@@ -28,7 +28,7 @@
               type="daterange"
               align="right"
               placeholder="选择日期范围"
-              :picker-options="pickerOptions2"
+              :picker-options="pickerOptions"
               style="width: 220px">
             </el-date-picker>
           </div>
@@ -39,31 +39,30 @@
         </el-form-item>
       </el-form>
 
-      <el-dialog title="收货地址" v-model="dialogFormVisible">
+      <el-dialog title="" v-model="dialogFormVisible">
 
-          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="活动名称" prop="name">
-              <el-input v-model="ruleForm.name"></el-input>
+          <el-form :model="adminUserForm" :rules="rules" ref="adminUserForm" label-width="100px" class="demo-adminUserForm">
+            <el-form-item label="账号" prop="email">
+              <el-input v-model="adminUserForm.email"></el-input>
             </el-form-item>
             <el-form-item label="活动区域" prop="region">
-              <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+              <el-select v-model="adminUserForm.region" placeholder="请选择活动区域">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="活动时间">
-
+            <el-form-item label="加入时间">
               <el-date-picker
-                v-model="ruleForm.date1"
+                v-model="adminUserForm.ctime"
                 type="datetime"
                 placeholder="选择日期时间">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="即时配送">
-              <el-switch on-text="" off-text="" v-model="ruleForm.delivery"></el-switch>
+            <el-form-item label="有效">
+              <el-switch on-text="" off-text="" v-model="adminUserForm.delivery"></el-switch>
             </el-form-item>
-            <el-form-item label="活动性质" prop="type">
-              <el-checkbox-group v-model="ruleForm.type">
+            <el-form-item label="用户tag" prop="type">
+              <el-checkbox-group v-model="adminUserForm.type">
                 <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
                 <el-checkbox label="地推活动" name="type"></el-checkbox>
                 <el-checkbox label="线下主题活动" name="type"></el-checkbox>
@@ -71,24 +70,20 @@
               </el-checkbox-group>
             </el-form-item>
             <el-form-item label="特殊资源" prop="resource">
-              <el-radio-group v-model="ruleForm.resource">
+              <el-radio-group v-model="adminUserForm.resource">
                 <el-radio label="线上品牌商赞助"></el-radio>
                 <el-radio label="线下场地免费"></el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="活动形式" prop="desc">
-              <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+            <el-form-item label="活动textarea" prop="desc">
+              <el-input type="textarea" v-model="adminUserForm.desc"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click.native.prevent="handleSubmit">立即创建</el-button>
+              <el-button type="primary" @click.native.prevent="handleSubmit">创建</el-button>
               <el-button @click.native.prevent="handleReset">重置</el-button>
             </el-form-item>
           </el-form>
 
-        <span slot="footer" class="dialog-footer">
-          <el-button @click.native="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click.native="dialogFormVisible = false">确 定</el-button>
-        </span>
       </el-dialog>
 
       <el-table
@@ -100,7 +95,6 @@
         <el-table-column
             inline-template
             label="操作"
-            width="180"
             >
             <el-button-group>
                 <el-button type="primary" size="small">编辑</el-button>
@@ -109,31 +103,40 @@
             </el-button-group>
         </el-table-column>
         <el-table-column
-            property="date"
-            label="日期"
-            width="180">
+            property="email"
+            label="账号"
+            >
         </el-table-column>
         <el-table-column
-            property="name"
-            label="姓名"
-            width="180">
+            property="username"
+            label="用户名"
+            >
         </el-table-column>
         <el-table-column
-            property="address"
-            label="地址"
+            property="__is_superuser"
+            label="是否超级管理员"
+            >
         </el-table-column>
-
+        <el-table-column
+            property="date_joined"
+            label="加入日期"
+        </el-table-column>
+        <el-table-column
+            property="last_login"
+            label="最后登录日期"
+            >
+        </el-table-column>
       </el-table>
 
       <div class="">
         <el-pagination
           @sizechange="handleSizeChange"
           @currentchange="handleCurrentChange"
-          :current-page="5"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          :current-page="current_page"
+          :page-sizes="[1, 100, 200, 300, 400]"
+          :page-size="per_page"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400">
+          :total="total_page">
         </el-pagination>
       </div>
 
@@ -148,57 +151,24 @@ export default {
     return {
       dialogFormVisible: false,
       formLabelWidth: '40',
-      tableData: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-08',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-06',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-07',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
-
-      ruleForm: {
+      tableData: [],
+      adminUserForm: {
         name: '',
         region: '',
-        date1: '',
-        date2: '',
+        ctime: '',
         delivery: false,
         type: [],
         resource: '',
         desc: ''
       },
       rules: {
-        name: [
+        email: [
           { required: true, message: '请输入活动名称', trigger: 'blur' }
         ],
         region: [
           { required: true, message: '请选择活动区域', trigger: 'change' }
         ],
-        date1: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-        ],
-        date2: [
+        ctime: [
           { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
         ],
         type: [
@@ -217,7 +187,7 @@ export default {
         date_range: '',
       },
 
-      pickerOptions2: {
+      pickerOptions: {
          shortcuts: [{
            text: '最近一周',
            onClick(picker) {
@@ -244,23 +214,26 @@ export default {
            }
          }]
        },
+       current_page: 1,
+       total_page: 1,
+       per_page: 100,
 
     }
   },
   computed: {},
-  ready () {},
+  mounted () {
+    this.onSearch();
+  },
   attached () {},
   methods: {
-
     handleReset() {
-      this.$refs.ruleForm.resetFields();
+      this.$refs.adminUserForm.resetFields();
     },
     handleSubmit(ev) {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.adminUserForm.validate((valid) => {
         if (valid) {
           alert('submit!');
-          console.log(this.ruleForm);
-
+          console.log(this.adminUserForm);
         } else {
           console.log('error submit!!');
           return false;
@@ -268,12 +241,14 @@ export default {
       });
     },
     onSearch(ev) {
-      console.log(this.formInline);
-      this.$http.post('/ends/a_user/login/', this.formInline).then((response) => {
+      this.$http.get('/ends/a_user/a_user_list/', {params: this.formInline}).then((response) => {
         if(response.data.status > 0){
           this.error_message = response.data.message;
         }else {
-          this.$emit('_logged_in', response.data.data);
+          console.log(response.data);
+          this._tableData = response.data;
+          this.total_page = this._tableData.length
+          this.tableData = this._tableData.slice(0, this.per_page)
         }
       });
     },
@@ -282,30 +257,35 @@ export default {
       if(button_text == '编辑'){
         this.dialogFormVisible = true;
 
-        this.ruleForm = {
-          name: '来来来来来来',
+        this.adminUserForm = {
+          email: 'zw@mysite.com',
           region: 'shanghai',
-          date1: '2016-05-05',
-          date2: '2016-05-05',
           delivery: false,
+          ctime: '2016-05-05',
           type: [],
           resource: '',
           desc: ''
         };
-        console.log(button_text);
+
       }else if(button_text == '上架') {
-        console.log(button_text);
+
       }else if (button_text == '下架') {
-        console.log(button_text);
-        console.log();
 
       }
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.per_page = val;
+      if(this._tableData){
+        this.tableData = this._tableData.slice(this.per_page * (this.current_page - 1), this.per_page * this.current_page);
+      }
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.current_page = val;
+      if(this._tableData){
+        this.tableData = this._tableData.slice(this.per_page * (this.current_page - 1), this.per_page * this.current_page);
+      }
     },
   },
   components: {

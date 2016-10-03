@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     login(a, e) {
-      this.$http.post('/ends/a_user/login/', this.user, {params: this.user}).then((response) => {
+      this.$http.post('/ends/a_user/login/', this.user).then((response) => {
         if(response.data.status > 0){
           this.error_message = response.data.message;
         }else {
