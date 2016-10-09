@@ -14,7 +14,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from config.global_conf import USER_TYPE, RESULT_404, NO_PERMISSION
 from DjangoCaptcha import Captcha
-from skylark import Database
 import utils
 import logging
 import random
@@ -23,7 +22,12 @@ import json
 import copy
 from .model.Menu import Menu
 
+from peewee import *
+
 from model.pw_model import AuthGroup
+from model.pw_model import AuthUserGroups
+from model.pw_model import AuthUser
+
 from .model.UserExtra import UserExtra
 from .model.Menu import Menu
 from .model.AdminUser import AdminUser
@@ -391,7 +395,13 @@ def get_user_group_detail(request):
     user_group_keys = ['name', 'id']
     if request.method == 'GET':
         g_id = request.GET.get('id', '')
-        group_user = Database.execute("SELECT a.id, a.username, b.group_id FROM auth_user a LEFT JOIN `auth_user_groups` b ON a.id = b.user_id;", ()).fetchall()
+        res = (AuthUser.select().join(AuthUserGroups, JOIN.LEFT_OUTER, on=(AuthUser.id == AuthUserGroups.group).alias('user_group')))
+        for item in res:
+            print(item)
+
+        group_user = utils.pw_objects_to_dict(res, ['log'])
+        print(res)
+
         print(group_user)
         for ii in range(len(group_user)):
             if group_user[ii]['group_id'] == g_id:

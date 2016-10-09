@@ -78,7 +78,7 @@ def objects_to_dict(objects):
     else:
         return to_dict(objects)
 
-def pw_objects_to_dict(objects):
+def pw_objects_to_dict(objects, keys= []):
     res = []
     for object_c in objects:
         res.append(object_c)
