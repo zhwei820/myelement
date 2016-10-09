@@ -84,7 +84,6 @@ def pw_objects_to_dict(objects, keys= []):
         res.append(object_c)
     return res
 
-
 def cut_long_data(table_data):  # for display in table
     try:
         unit_len = 20

@@ -326,6 +326,7 @@ def menu_shut(request, id):
     if not utils.check_permission(request.user.extra, 'a_menus_index'):
         return JsonResponse(NO_PERMISSION)
     a_menu = Menu.where(id=id).select().execute().one()
+
     a_menu.status = 0
     try:
         a_menu.save()
@@ -334,13 +335,15 @@ def menu_shut(request, id):
     return JsonResponse({"status": 0, "message":"编辑成功"})
 
 def _get_menus(menu_ids):
-    menu_tree = Menu.where(status=1).where(parent_id=0).select().execute().all()
-    menus = Menu.where(status=1).where(Menu.parent_id.__gt__(0)).select().execute().all()
+    menu_tree = AMenu.select().where(AMenu.status==1, AMenu.parent==0).dicts()
+    menus = AMenu.select().where(AMenu.status==1, AMenu.parent > 0).dicts()
+    menu_tree = utils.pw_objects_to_dict(menu_tree)
+    menus = utils.pw_objects_to_dict(menus)
 
     for item in menu_tree:
         item['sub'] = []
         for item1 in menus:
-            if item1['parent_id'] == item['id']:
+            if item1['parent'] == item['id'] and item['id'] in menu_ids:
                 item1['route_url'] = '/' + item1['action'] + '_' + item1['type']
                 item['sub'].append(item1)
 
@@ -393,20 +396,15 @@ def get_user_group(request):
 
 @login_required
 def get_user_group_detail(request):
-    user_group_keys = ['name', 'id']
     if request.method == 'GET':
         g_id = request.GET.get('id', '')
-        res = (AuthUser.select().join(AuthUserGroups, JOIN.LEFT_OUTER, on=(AuthUser.id == AuthUserGroups.group).alias('user_group')))
-        for item in res:
-            print(item)
+        res = (AuthUser.select(AuthUser, AuthUserGroups).join(AuthUserGroups, JOIN.LEFT_OUTER, on=(AuthUser.id == AuthUserGroups.user))).dicts()
+        group_user = utils.pw_objects_to_dict(res, ['user_groups'])
 
-        group_user = utils.pw_objects_to_dict(res, ['log'])
-
-        print(group_user)
         for ii in range(len(group_user)):
-            if group_user[ii]['group_id'] == g_id:
+            if group_user[ii]['group'] == g_id:
                 group_user[ii]['status'] = 1
-            elif group_user[ii]['group_id']:
+            elif group_user[ii]['group']:
                 group_user[ii]['status'] = -1
             else:
                 group_user[ii]['status'] = 0
