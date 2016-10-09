@@ -99,7 +99,6 @@ def user_list(request, param):
             query_filter['email'] = request.GET.get('email', '')
             query_filter['date_start'] = request.GET.get('date_start', '1970-01-01')
             query_filter['date_end'] = request.GET.get('date_end', '2970-01-01')
-            print(query_filter)
 
             user_list = AuthUser.select().where(AuthUser.email.contains(query_filter['email']),
                                                 AuthUser.date_joined.between(query_filter['date_start'], query_filter['date_end'])).dicts()
@@ -349,8 +348,8 @@ def _get_menus(menu_ids):
 
 @login_required
 def get_menus(request):
-    menus = MenuUser.where(user_id=request.user.id).select().execute().all()
-    menu_ids = [item['m_id'] for item in menus]
+    menus = AMenuUser.select().where(AMenuUser.user==request.user.id).dicts()
+    menu_ids = [item['m'] for item in menus]
     user_menus = _get_menus(menu_ids)
     return JsonResponse(user_menus, safe = False)
 
