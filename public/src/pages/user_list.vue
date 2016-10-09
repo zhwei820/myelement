@@ -249,12 +249,14 @@ export default {
       });
     },
     onSearch(ev) {
+      this.formInline.date_start = this.formInline.date_range[0] && this.formInline.date_range[0].Format("yyyy-MM-dd");
+      this.formInline.date_end = this.formInline.date_range[1] && this.formInline.date_range[1].Format("yyyy-MM-dd");
       this.$http.get('/ends/a_user/a_user_list/', {params: this.formInline}).then((response) => {
         if(response.data.status > 0){
           this.error_message = response.data.message;
         }else {
           this._tableData = response.data;
-          if(this._tableData[0]){
+          if(this._tableData){
             this.total_page = this._tableData.length
             this.tableData = this._tableData.slice(0, this.per_page)
           }

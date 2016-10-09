@@ -23,10 +23,7 @@ import copy
 from .model.Menu import Menu
 
 from peewee import *
-
-from model.pw_model import AuthGroup
-from model.pw_model import AuthUserGroups
-from model.pw_model import AuthUser
+from model.pw_model import *
 
 from .model.UserExtra import UserExtra
 from .model.Menu import Menu
@@ -100,8 +97,13 @@ def user_list(request, param):
         try:
             query_filter = {}
             query_filter['email'] = request.GET.get('email', '')
-            users = User.objects.filter(email__contains=query_filter['email'])
-            user_list = utils.objects_to_dict(list(users))
+            query_filter['date_start'] = request.GET.get('date_start', '1970-01-01')
+            query_filter['date_end'] = request.GET.get('date_end', '2970-01-01')
+            print(query_filter)
+
+            user_list = AuthUser.select().where(AuthUser.email.contains(query_filter['email']),
+                                                AuthUser.date_joined.between(query_filter['date_start'], query_filter['date_end'])).dicts()
+            user_list = utils.pw_objects_to_dict(user_list)
 
             option = {'is_staff': global_conf.yes_no,
                       'is_superuser': global_conf.yes_no,
@@ -400,7 +402,6 @@ def get_user_group_detail(request):
             print(item)
 
         group_user = utils.pw_objects_to_dict(res, ['log'])
-        print(res)
 
         print(group_user)
         for ii in range(len(group_user)):
