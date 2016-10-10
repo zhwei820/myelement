@@ -8,19 +8,18 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "element-ui": "^1.0.0-rc.4",
-    "vue": "^2.0.0-rc.6",
-    "vue-resource": "^1.0.3",
-    "vue-router": "^2.0.0-beta.2"
-
+    "element-ui": "^1.0.0-rc.6",
+    "vue": "",
+    "vue-resource": "",
+    "vue-router": ""
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
     "babel-preset-es2015": "^6.13.2",
-    "cross-env": "^1.0.6",
-    "css-loader": "^0.23.1",
-    "file-loader": "^0.8.5",
+    "cross-env": "^3.1.2",
+    "css-loader": "^0.25.0",
+    "file-loader": "^0.9.0",
     "style-loader": "^0.13.1",
     "vue-loader": "^9.4.2",
     "webpack": "2.1.0-beta.22",

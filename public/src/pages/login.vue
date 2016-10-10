@@ -52,10 +52,11 @@ export default {
   props: ['user_data'],
   computed: {},
   mounted () {
-    console.log(this.user_data);
+
   },
   methods: {
     login(a, e) {
+      console.log(this.user);
       this.$http.post('/ends/a_user/login/', this.user).then((response) => {
         if(response.data.status > 0){
           this.error_message = response.data.message;
@@ -64,11 +65,6 @@ export default {
         }
     });
 
-      // this.$notify({
-      //   title: 'It Works',
-      //   message: 'We have laid the groundwork for you. Now it\'s your time to build something epic!',
-      //   duration: 6000
-      // })
     },
 
   },
