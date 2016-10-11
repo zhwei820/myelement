@@ -5,5 +5,6 @@ gunicorn
 Unipath
 python-decouple
 mysqlclient
-skylark
 xlwt
+peewee
+pillow
