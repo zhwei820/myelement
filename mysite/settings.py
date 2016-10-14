@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'a_user',
     'operation',
     'package',
+    'redisboard',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -129,3 +130,28 @@ FILE_UPLOAD_TEMP_DIR = '/tmp/'
 FILE_UPLOAD_PERMISSIONS = 644
 
 CDN_URL = config('CDN_URL', default=False)
+
+
+
+REDISBOARD_DETAIL_FILTERS = ['.*']
+
+REDISBOARD_DETAIL_FILTERS = ['.*']
+
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': [
+            '192.168.199.224:6379',
+        ],
+        'OPTIONS': {
+            'DB': 2,
+            'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
+            'CONNECTION_POOL_CLASS_KWARGS': {
+                'max_connections': 200,
+                'timeout': 20,
+            },
+            'MAX_CONNECTIONS': 1000,
+            'PICKLE_VERSION': -1,
+        },
+    },
+}
