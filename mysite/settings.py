@@ -133,9 +133,9 @@ CDN_URL = config('CDN_URL', default=False)
 
 
 
-REDISBOARD_DETAIL_FILTERS = ['.*']
+REDISBOARD_DETAIL_FILTERS = ['uptime.*', 'db.*']
 
-REDISBOARD_DETAIL_FILTERS = ['.*']
+# REDISBOARD_DETAIL_FILTERS = ['.*']
 
 CACHES = {
     'default': {
