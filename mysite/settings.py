@@ -19,6 +19,7 @@ from decouple import config
 import dj_database_url
 import os
 
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SECRET_KEY = config('SECRET_KEY')
@@ -48,11 +49,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'mysite',
     'a_user',
     'operation',
     'package',
     'redisboard',
+
+     'django_admin_generator',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -155,3 +159,4 @@ CACHES = {
         },
     },
 }
+

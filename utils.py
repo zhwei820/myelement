@@ -24,8 +24,8 @@ from datetime import datetime
 from datetime import date
 from config import global_conf
 from config.global_conf import PAGE_CAPACITY
-from a_user.model.Menu import Menu
-from a_user.model.MenuUser import MenuUser
+# from a_user.model.Menu import Menu
+# from a_user.model.MenuUser import MenuUser
 
 from django.conf import settings
 
@@ -33,11 +33,10 @@ from third.export_excel import ExcelResponse
 from mysite.lib.mysql_manager_rw import mmysql_rw
 
 def check_permission(user, action):
-    menu = Menu.where(status=1, action=action).select().execute().one()
-    permission = MenuUser.where(user_id=user.id).where(m_id=menu['id']).select().execute().one()
-    print(menu)
-    print(permission)
-    return True if permission else False
+    # menu = Menu.where(status=1, action=action).select().execute().one()
+    # permission = MenuUser.where(user_id=user.id).where(m_id=menu['id']).select().execute().one()
+    return True 
+    # if permission else False
 
 
 def get_user_role(user_id):

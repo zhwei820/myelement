@@ -8,3 +8,4 @@ mysqlclient
 xlwt
 peewee
 pillow
+redisboard

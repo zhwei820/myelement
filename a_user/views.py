@@ -20,15 +20,12 @@ import random
 import traceback
 import json
 import copy
-from .model.Menu import Menu
+# from .model.Menu import Menu
 
-from peewee import *
-from model.pw_model import *
-
-from .model.UserExtra import UserExtra
-from .model.Menu import Menu
-from .model.AdminUser import AdminUser
-from .model.MenuUser import MenuUser
+# from .model.UserExtra import UserExtra
+# from .model.Menu import Menu
+# from .model.AdminUser import AdminUser
+# from .model.MenuUser import MenuUser
 from config import global_conf
 from django.views.decorators.csrf import csrf_exempt
 

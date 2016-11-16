@@ -20,7 +20,7 @@ import traceback
 import datetime
 import json
 import copy
-from .model.Version import Version
+# from .model.Version import Version
 from config import global_conf
 from django.conf import settings
 

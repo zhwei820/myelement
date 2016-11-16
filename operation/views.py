@@ -23,7 +23,7 @@ import traceback
 import datetime
 import json
 import copy
-from .model.UMessage import UMessage
+# from .model.UMessage import UMessage
 from config import global_conf
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt

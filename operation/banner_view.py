@@ -20,7 +20,7 @@ import traceback
 import datetime
 import json
 import copy
-from .model.Banner import Banner
+# from .model.Banner import Banner
 from config import global_conf
 from django.conf import settings
 
