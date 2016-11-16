@@ -65,7 +65,7 @@
 		if (this.isRTL){
 			this.picker.addClass('datepicker-rtl');
 			this.picker.find('.prev i, .next i')
-						.toggleClass('fa-chevron-left fa-chevron-right');
+						.toggleClass('fa fa-arrow-left fa-arrow-right');
 		}
 
 		this.autoclose = false;
@@ -1010,9 +1010,9 @@
 		},
 		headTemplate: '<thead>'+
 							'<tr>'+
-								'<th class="prev"><i class="fa fa-chevron-left"/></th>'+
+								'<th class="prev"><i class="fa fa-arrow-left"/></th>'+
 								'<th colspan="5" class="switch"></th>'+
-								'<th class="next"><i class="fa fa-chevron-right"/></th>'+
+								'<th class="next"><i class="fa fa-arrow-right"/></th>'+
 							'</tr>'+
 						'</thead>',
 		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',

@@ -4,16 +4,12 @@ Form Widget classes specific to the Django admin site.
 from itertools import chain
 from django import forms
 from django.forms.widgets import RadioFieldRenderer, RadioChoiceInput
-import sys
-if sys.version_info.major < 3:
-   from django.utils.encoding import force_unicode as force_text
-else:
-   from django.utils.encoding import force_text
+from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.utils.translation import ugettext as _
 
-from xadmin.util import vendor
+from util import vendor
 
 
 class AdminDateWidget(forms.DateInput):
@@ -38,7 +34,7 @@ class AdminTimeWidget(forms.TimeInput):
 
     @property
     def media(self):
-        return vendor('datepicker.js','timepicker.js', 'timepicker.css', 'xadmin.widget.datetime.js')
+        return vendor('datepicker.js', 'clockpicker.js', 'clockpicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'time-field', 'size': '8'}
@@ -48,7 +44,7 @@ class AdminTimeWidget(forms.TimeInput):
 
     def render(self, name, value, attrs=None):
         input_html = super(AdminTimeWidget, self).render(name, value, attrs)
-        return mark_safe('<div class="input-group time bootstrap-timepicker"><span class="input-group-addon"><i class="fa fa-clock-o">'
+        return mark_safe('<div class="input-group time bootstrap-clockpicker"><span class="input-group-addon"><i class="fa fa-clock-o">'
                          '</i></span>%s<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>' % (input_html, _(u'Now')))
 
 
@@ -85,7 +81,7 @@ class AdminRadioInput(RadioChoiceInput):
             label_for = ' for="%s_%s"' % (self.attrs['id'], self.index)
         else:
             label_for = ''
-        choice_label = conditional_escape(force_text(self.choice_label))
+        choice_label = conditional_escape(force_unicode(self.choice_label))
         if attrs.get('inline', False):
             return mark_safe(u'<label%s class="radio-inline">%s %s</label>' % (label_for, self.tag(), choice_label))
         else:
@@ -103,7 +99,7 @@ class AdminRadioFieldRenderer(RadioFieldRenderer):
         return AdminRadioInput(self.name, self.value, self.attrs.copy(), choice, idx)
 
     def render(self):
-        return mark_safe(u'\n'.join([force_text(w) for w in self]))
+        return mark_safe(u'\n'.join([force_unicode(w) for w in self]))
 
 
 class AdminRadioSelect(forms.RadioSelect):
@@ -118,7 +114,7 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
         final_attrs = self.build_attrs(attrs, name=name)
         output = []
         # Normalize to strings
-        str_values = set([force_text(v) for v in value])
+        str_values = set([force_unicode(v) for v in value])
         for i, (option_value, option_label) in enumerate(chain(self.choices, choices)):
             # If an ID attribute was given, add a numeric index as a suffix,
             # so that the checkboxes don't all have the same ID attribute.
@@ -130,9 +126,9 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
 
             cb = forms.CheckboxInput(
                 final_attrs, check_test=lambda value: value in str_values)
-            option_value = force_text(option_value)
+            option_value = force_unicode(option_value)
             rendered_cb = cb.render(name, option_value)
-            option_label = conditional_escape(force_text(option_label))
+            option_label = conditional_escape(force_unicode(option_label))
 
             if final_attrs.get('inline', False):
                 output.append(u'<label%s class="checkbox-inline">%s %s</label>' % (label_for, rendered_cb, option_label))
@@ -150,20 +146,10 @@ class AdminSelectMultiple(forms.SelectMultiple):
 
 
 class AdminFileWidget(forms.ClearableFileInput):
-    @property
-    def media(self):
-        return vendor('filestyle.js')
-
     template_with_initial = (u'<p class="file-upload">%s</p>'
                              % forms.ClearableFileInput.template_with_initial)
     template_with_clear = (u'<span class="clearable-file-input">%s</span>'
                            % forms.ClearableFileInput.template_with_clear)
-
-    def render(self, name, value, attrs=None):
-        attrs["class"] = "filestyle"
-        attrs["data-icon"] = "false"
-        attrs["data-buttonText"] = _('Choose file')
-        return super(AdminFileWidget, self).render(name, value, attrs)
 
 
 class AdminTextareaWidget(forms.Textarea):
@@ -205,35 +191,3 @@ class AdminCommaSeparatedIntegerFieldWidget(forms.TextInput):
             final_attrs.update(attrs)
         super(AdminCommaSeparatedIntegerFieldWidget,
               self).__init__(attrs=final_attrs)
-
-
-class AdminColorPickerWidget(forms.TextInput):
-    @property
-    def media(self):
-        return vendor('spectrum.js', 'spectrum.css', 'xadmin.widget.colorpicker.js')
-
-    def __init__(self, attrs=None):
-        final_attrs = {'class': 'colorpicker'}
-        if attrs is not None:
-            final_attrs.update(attrs)
-        super(AdminColorPickerWidget, self).__init__(attrs=final_attrs)
-
-
-class AdminOpenStreetMapWidget(forms.TextInput):
-    @property
-    def media(self):
-        return vendor('openlayers.js', 'openlayers.css', 'xadmin.widget.openstreetmap.js')
-
-    def __init__(self, attrs=None):
-        final_attrs = {'class': 'openstreetmap'}
-
-        from django.conf import settings
-        if hasattr(settings, 'OSM_COORDINATES_ZOOM'):
-            final_attrs['zoom'] = settings.OSM_COORDINATES_ZOOM
-        if hasattr(settings, 'OSM_COORDINATES_CENTER'):
-            final_attrs['center'] = settings.OSM_COORDINATES_CENTER
-        final_attrs['style'] = 'display:none;';
-
-        if attrs is not None:
-            final_attrs.update(attrs)
-        super(AdminOpenStreetMapWidget, self).__init__(attrs=final_attrs)

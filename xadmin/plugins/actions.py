@@ -1,20 +1,20 @@
+from collections import OrderedDict
 from django import forms
 from django.core.exceptions import PermissionDenied
 from django.db import router
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.response import TemplateResponse
-from django.utils.datastructures import SortedDict
-import sys
-if sys.version_info.major < 3:
-   from django.utils.encoding import force_unicode as force_text
-else:
-   from django.utils.encoding import force_text
+from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import ugettext as _, ungettext
 from django.utils.text import capfirst
+
+from django.contrib.admin.utils import get_deleted_objects
+
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
-from xadmin.util import model_format_dict, get_deleted_objects, model_ngettext
+from xadmin.util import model_format_dict, model_ngettext
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.views.base import filter_hook, ModelAdminView
 
@@ -24,13 +24,12 @@ checkbox = forms.CheckboxInput({'class': 'action-select'}, lambda value: False)
 
 
 def action_checkbox(obj):
-    return checkbox.render(ACTION_CHECKBOX_NAME, force_text(obj.pk))
+    return checkbox.render(ACTION_CHECKBOX_NAME, force_unicode(obj.pk))
 action_checkbox.short_description = mark_safe(
     '<input type="checkbox" id="action-toggle" />')
 action_checkbox.allow_tags = True
 action_checkbox.allow_export = False
 action_checkbox.is_column = False
-
 
 class BaseActionView(ModelAdminView):
     action_name = None
@@ -60,6 +59,8 @@ class DeleteSelectedAction(BaseActionView):
     delete_confirmation_template = None
     delete_selected_confirmation_template = None
 
+    delete_models_batch = True
+
     model_perm = 'delete'
     icon = 'fa fa-times'
 
@@ -67,7 +68,13 @@ class DeleteSelectedAction(BaseActionView):
     def delete_models(self, queryset):
         n = queryset.count()
         if n:
-            queryset.delete()
+            if self.delete_models_batch:
+                self.log('delete', _('Batch delete %(count)d %(items)s.') % { "count": n, "items": model_ngettext(self.opts, n) })
+                queryset.delete()
+            else:
+                for obj in queryset:
+                    self.log('delete', '', obj)
+                    obj.delete()
             self.message_user(_("Successfully deleted %(count)d %(items)s.") % {
                 "count": n, "items": model_ngettext(self.opts, n)
             }, 'success')
@@ -82,7 +89,7 @@ class DeleteSelectedAction(BaseActionView):
 
         # Populate deletable_objects, a data structure of all related objects that
         # will also be deleted.
-        deletable_objects, perms_needed, protected = get_deleted_objects(
+        deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
             queryset, self.opts, self.user, self.admin_site, using)
 
         # The user has already confirmed the deletion.
@@ -95,9 +102,9 @@ class DeleteSelectedAction(BaseActionView):
             return None
 
         if len(queryset) == 1:
-            objects_name = force_text(self.opts.verbose_name)
+            objects_name = force_unicode(self.opts.verbose_name)
         else:
-            objects_name = force_text(self.opts.verbose_name_plural)
+            objects_name = force_unicode(self.opts.verbose_name_plural)
 
         if perms_needed or protected:
             title = _("Cannot delete %(name)s") % {"name": objects_name}
@@ -207,7 +214,7 @@ class ActionPlugin(BaseAdminPlugin):
 
     def get_actions(self):
         if self.actions is None:
-            return SortedDict()
+            return OrderedDict()
 
         actions = [self.get_action(action) for action in self.global_actions]
 
@@ -221,8 +228,8 @@ class ActionPlugin(BaseAdminPlugin):
         # get_action might have returned None, so filter any of those out.
         actions = filter(None, actions)
 
-        # Convert the actions into a SortedDict keyed by name.
-        actions = SortedDict([
+        # Convert the actions into a OrderedDict keyed by name.
+        actions = OrderedDict([
             (name, (ac, name, desc, icon))
             for ac, name, desc, icon in actions
         ])
@@ -235,7 +242,7 @@ class ActionPlugin(BaseAdminPlugin):
         tuple (name, description).
         """
         choices = []
-        for ac, name, description, icon in self.actions.values():
+        for ac, name, description, icon in self.actions.itervalues():
             choice = (name, description % model_format_dict(self.opts), icon)
             choices.append(choice)
         return choices
@@ -283,7 +290,8 @@ class ActionPlugin(BaseAdminPlugin):
     # Block Views
     def block_results_bottom(self, context, nodes):
         if self.actions and self.admin_view.result_count:
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_bottom.actions.html', context_instance=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.results_bottom.actions.html',
+                                                 context=get_context_dict(context)))
 
 
 site.register_plugin(ActionPlugin, ListAdminView)

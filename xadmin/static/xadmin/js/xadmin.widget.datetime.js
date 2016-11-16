@@ -38,7 +38,6 @@
       date_string: gettext('%a %d %b %Y %T %Z'),
       ampm: gettext("AM PM").split(' '),
       ampmLower: gettext("am pm").split(' '),
-      weekStart: get_format('FIRST_DAY_OF_WEEK'),
       dateFormat: get_format('DATE_INPUT_FORMATS')[0],
       dateJSFormat: $.convert_format(get_format('DATE_INPUT_FORMATS')[0]),
       timeRepr: gettext('%T')
@@ -48,14 +47,29 @@
 
     $.fn.exform.renders.push(function(f){
       f.find('.input-group.date input').each(function(e){
-        var dp = $(this).datepicker({format: $.date_local.dateJSFormat, weekStart: $.date_local.weekStart, language: 'xadmin', todayBtn: "linked", autoclose: true})
+        var dp = $(this).datepicker({format: $.date_local.dateJSFormat, language: 'xadmin', todayBtn: "linked", autoclose: true})
           .data('datepicker');
         $(this).parent().find('button').click(function(e){
           dp.update(new Date());
         })
       })
+      if($.fn.clockpicker){
+        f.find('.input-group.bootstrap-clockpicker').each(function(e){
+          var el = $(this).find('input');
+          var tp = el.clockpicker({
+              autoclose: true,
+              'default': 'now'
+          });
+
+          $(this).find('button').click(function(e){
+            var now = new Date()
+              , value = now.getHours() + ':' + now.getMinutes();
+            el.attr('value', value);
+          })
+        })
+      }
       if($.fn.timepicker){
-        f.find('.input-group.time').each(function(e){
+        f.find('.input-group.bootstrap-timepicker').each(function(e){
           var el = $(this).find('input');
           var value = el.val();
           var tp = el.timepicker({

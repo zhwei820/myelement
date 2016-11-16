@@ -1,18 +1,16 @@
 {% extends 'xadmin/base.html' %}
 {% load i18n xadmin_tags %}
-{% load url from future %}
-{% load firstof from future %}
-
 {% block title %}{{ title }} | {{ site_title }}{% endblock %}
 
 {% block body %}
   <!-- Header -->
+  {% block top-nav %}
   <div id="top-nav" class="navbar navbar-xs navbar-inverse navbar-fixed-top">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">{% block branding %}{{ site_title }}{% endblock %}</a>
     </div>
     <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav pull-right">
         {% view_block 'top_navmenu' %}
         {% if user.is_active and user.is_staff %}
           <li class="dropdown">
@@ -28,7 +26,7 @@
       {% view_block 'top_navbar' %}
     </div>
   </div>
-
+  {% endblock %}
   <div id="body-content" class="clearfix row">
     <div id="left-side" class="col-sm-1 col-md-2">
         {% block navbar %}
@@ -78,7 +76,7 @@
           </ul>
           {% view_block 'nav_form' %}
           {% block nav_form %}{% endblock %}
-          <div class="navbar-btn navbar-right hide-xs">
+          <div class="navbar-btn pull-right hide-xs">
             {% view_block 'nav_btns' %}
             {% block nav_btns %}{% endblock %}
           </div>
@@ -107,7 +105,7 @@
   <div id="footer">
     <hr/>
     <footer class="text-center">
-      <p>{{copyright_company}}</p>
+        <p>&copy; {% block site_footer %}{{ site_footer }}{% endblock %}</p>
     </footer>
   </div>
   {% endblock %}

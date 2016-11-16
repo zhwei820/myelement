@@ -1,6 +1,5 @@
 # coding=utf-8
 from django import forms
-from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,
                                        AdminPasswordChangeForm, PasswordChangeForm)
 from django.contrib.auth.models import Group, Permission
@@ -12,9 +11,10 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_post_parameters
 from django.forms import ModelMultipleChoiceField
+from django.contrib.auth.models import User
 from xadmin.layout import Fieldset, Main, Side, Row, FormHelper
 from xadmin.sites import site
-from xadmin.util import unquote, User
+from xadmin.util import unquote
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView, csrf_protect_m
 
 
@@ -24,7 +24,6 @@ ACTION_NAME = {
     'edit': _('Can edit %s'),
     'delete': _('Can delete %s'),
     'view': _('Can view %s'),
-    'export': _('Can export %s'),
 }
 
 
@@ -40,20 +39,6 @@ class PermissionModelMultipleChoiceField(ModelMultipleChoiceField):
 
     def label_from_instance(self, p):
         return get_permission_name(p)
-
-
-class CustomUserCreationForm(UserCreationForm):
-    def clean_username(self):
-        username = self.cleaned_data["username"]
-        UserModel = get_user_model()
-        try:
-            UserModel._default_manager.get(username=username)
-        except UserModel.DoesNotExist:
-            return username
-        raise forms.ValidationError(
-            self.error_messages['duplicate_username'],
-            code='duplicate_username',
-        )
 
 
 class GroupAdmin(object):
@@ -87,7 +72,7 @@ class UserAdmin(object):
 
     def get_model_form(self, **kwargs):
         if self.org_obj is None:
-            self.form = CustomUserCreationForm
+            self.form = UserCreationForm
         else:
             self.form = UserChangeForm
         return super(UserAdmin, self).get_model_form(**kwargs)
@@ -167,6 +152,12 @@ class ModelPermissionPlugin(BaseAdminPlugin):
             qs = qs.filter(**filters)
         return qs
 
+    def get_list_display(self, list_display):
+        if self.user_can_access_owned_objects_only and \
+                not self.user.is_superuser and \
+                self.user_owned_objects_field in list_display:
+            list_display.remove(self.user_owned_objects_field)
+        return list_display
 
 site.register_plugin(ModelPermissionPlugin, ModelAdminView)
 
@@ -202,9 +193,10 @@ class ChangePasswordView(ModelAdminView):
         context = super(ChangePasswordView, self).get_context()
         helper = FormHelper()
         helper.form_tag = False
+        helper.include_media = False
         self.form.helper = helper
         context.update({
-            'title': _('Change password: %s') % escape(str(self.obj)),
+            'title': _('Change password: %s') % escape(unicode(self.obj)),
             'form': self.form,
             'has_delete_permission': False,
             'has_change_permission': True,
@@ -266,9 +258,7 @@ class ChangeAccountPasswordView(ChangePasswordView):
         else:
             return self.get_response()
 
-user_model = get_user_model()
-
-site.register_view(r'^%s/%s/(.+)/update/password/$' % (user_model._meta.app_label, user_model._meta.model_name),
+site.register_view(r'^auth/user/(.+)/password/$',
                    ChangePasswordView, name='user_change_password')
 site.register_view(r'^account/password/$', ChangeAccountPasswordView,
                    name='account_password')

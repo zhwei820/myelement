@@ -1,24 +1,22 @@
 import re
+from collections import OrderedDict
 from django import forms
 from django.db import models
 from django.template import loader
-
-from django import get_version
-v = get_version()
-if v[:3] > '1.7':
+try:
     from formtools.wizard.storage import get_storage
     from formtools.wizard.forms import ManagementForm
     from formtools.wizard.views import StepsHelper
-    STORAGE_NAME = 'formtools.wizard.storage.session.SessionStorage'
-else:
+except:
+    ##work for django<1.8
     from django.contrib.formtools.wizard.storage import get_storage
     from django.contrib.formtools.wizard.forms import ManagementForm
     from django.contrib.formtools.wizard.views import StepsHelper
-    STORAGE_NAME = 'django.contrib.formtools.wizard.storage.session.SessionStorage'
 
-from django.utils.datastructures import SortedDict
+from django.utils.module_loading import import_string
 from django.forms import ValidationError
 from django.forms.models import modelform_factory
+
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView
 
@@ -33,7 +31,7 @@ class WizardFormPlugin(BaseAdminPlugin):
     wizard_form_list = None
     wizard_for_update = False
 
-    storage_name = STORAGE_NAME
+    storage_name = 'formtools.wizard.storage.session.SessionStorage'
     form_list = None
     initial_dict = None
     instance_dict = None
@@ -43,17 +41,17 @@ class WizardFormPlugin(BaseAdminPlugin):
     def _get_form_prefix(self, step=None):
         if step is None:
             step = self.steps.current
-        return 'step_%d' % list(self.get_form_list()).index(step)
+        return 'step_%d' % self.get_form_list().keys().index(step)
 
     def get_form_list(self):
         if not hasattr(self, '_form_list'):
-            init_form_list = SortedDict()
+            init_form_list = OrderedDict()
 
             assert len(
                 self.wizard_form_list) > 0, 'at least one form is needed'
 
             for i, form in enumerate(self.wizard_form_list):
-                init_form_list[str(form[0])] = form[1]
+                init_form_list[unicode(form[0])] = form[1]
 
             self._form_list = init_form_list
 
@@ -86,8 +84,8 @@ class WizardFormPlugin(BaseAdminPlugin):
             # form. (This makes stepping back a lot easier).
             wizard_goto_step = self.request.POST.get('wizard_goto_step', None)
             if wizard_goto_step and int(wizard_goto_step) < len(self.get_form_list()):
-                self.storage.current_step = list(self.get_form_list(
-                ).keys())[int(wizard_goto_step)]
+                self.storage.current_step = self.get_form_list(
+                ).keys()[int(wizard_goto_step)]
                 self.admin_view.model_form = self.get_step_form()
                 self.wizard_goto_step = True
                 return
@@ -95,6 +93,7 @@ class WizardFormPlugin(BaseAdminPlugin):
             # Check if form was refreshed
             management_form = ManagementForm(
                 self.request.POST, prefix=self.prefix)
+
             if not management_form.is_valid():
                 raise ValidationError(
                     'ManagementForm data is missing or has been tampered.')
@@ -133,7 +132,7 @@ class WizardFormPlugin(BaseAdminPlugin):
                     return callback(self)
                 elif hasattr(self.admin_view, str(callback)):
                     return getattr(self.admin_view, str(callback))(self)
-        elif isinstance(attrs, forms.BaseForm):
+        elif issubclass(attrs, forms.BaseForm):
             return attrs
         return None
 
@@ -281,9 +280,9 @@ class WizardFormPlugin(BaseAdminPlugin):
         if step is None:
             step = self.steps.current
         form_list = self.get_form_list()
-        key = form_list.keyOrder.index(step) + 1
-        if len(form_list.keyOrder) > key:
-            return form_list.keyOrder[key]
+        key = form_list.keys().index(step) + 1
+        if len(form_list.keys()) > key:
+            return form_list.keys()[key]
         return None
 
     def get_prev_step(self, step=None):
@@ -295,9 +294,9 @@ class WizardFormPlugin(BaseAdminPlugin):
         if step is None:
             step = self.steps.current
         form_list = self.get_form_list()
-        key = form_list.keyOrder.index(step) - 1
+        key = form_list.keys().index(step) - 1
         if key >= 0:
-            return form_list.keyOrder[key]
+            return form_list.keys()[key]
         return None
 
     def get_step_index(self, step=None):
@@ -307,7 +306,7 @@ class WizardFormPlugin(BaseAdminPlugin):
         """
         if step is None:
             step = self.steps.current
-        return self.get_form_list().keyOrder.index(step)
+        return self.get_form_list().keys().index(step)
 
     def block_before_fieldsets(self, context, nodes):
         context.update(dict(self.storage.extra_data))
@@ -317,13 +316,13 @@ class WizardFormPlugin(BaseAdminPlugin):
                 'current_step': self.steps.current,
             }),
         }
-        nodes.append(loader.render_to_string('xadmin/blocks/model_form.before_fieldsets.wizard.html', context_instance=context))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_form.before_fieldsets.wizard.html',context))
 
     def block_submit_line(self, context, nodes):
         context.update(dict(self.storage.extra_data))
         context['wizard'] = {
             'steps': self.steps
         }
-        nodes.append(loader.render_to_string('xadmin/blocks/model_form.submit_line.wizard.html', context_instance=context))
+        nodes.append(loader.render_to_string('xadmin/blocks/model_form.submit_line.wizard.html',context))
 
 site.register_plugin(WizardFormPlugin, ModelFormAdminView)

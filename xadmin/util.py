@@ -2,32 +2,21 @@ import django
 from django.db import models
 from django.db.models.sql.query import LOOKUP_SEP
 from django.db.models.deletion import Collector
-
-from django import get_version
-v = get_version()
-if v[:3] > '1.7':
-    from django.db.models.fields.related import ForeignObjectRel
-else:
-    from django.db.models.related import RelatedObject as ForeignObjectRel
-from django.contrib.auth import get_permission_codename
+from django.db.models.fields.related import ForeignObjectRel
 from django.forms.forms import pretty_name
 from django.utils import formats
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
-import sys
-if sys.version_info.major < 3:
-   from django.utils.encoding import force_unicode as force_text, smart_unicode as smart_text, smart_str as smart_bytes
-else:
-   from django.utils.encoding import force_text, smart_text, smart_bytes
+from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.translation import ungettext
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
+from django.contrib.admin.utils import label_for_field, help_text_for_field
 import datetime
 import decimal
-
 
 if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
     from django.contrib.staticfiles.templatetags.staticfiles import static
@@ -44,17 +33,9 @@ try:
 except ImportError:
     from django.utils.timezone import localtime as tz_localtime
 
-try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-    username_field = User.USERNAME_FIELD
-except Exception:
-    from django.contrib.auth.models import User
-    username_field = 'username'
-
 
 def xstatic(*tags):
-    from xadmin.vendors import vendors
+    from vendors import vendors
     node = vendors
 
     fs = []
@@ -64,17 +45,17 @@ def xstatic(*tags):
         try:
             for p in tag.split('.'):
                 node = node[p]
-        except Exception as e:
+        except Exception, e:
             if tag.startswith('xadmin'):
                 file_type = tag.split('.')[-1]
                 if file_type in ('css', 'js'):
-                    node = str("xadmin/%s/%s" % (file_type, tag))
+                    node = "xadmin/%s/%s" % (file_type, tag)
                 else:
                     raise e
             else:
                 raise e
 
-        if type(node) in (str,):
+        if type(node) in (str, unicode):
             files = node
         else:
             mode = 'dev'
@@ -89,7 +70,7 @@ def xstatic(*tags):
             files = node[mode]
 
         files = type(files) in (list, tuple) and files or [files, ]
-        fs.extend(files)
+        fs.extend([f % {'lang': lang.replace('_', '-')} for f in files])
 
     return [f.startswith('http://') and f or static(f) for f in fs]
 
@@ -110,15 +91,11 @@ def lookup_needs_distinct(opts, lookup_path):
     """
     Returns True if 'distinct()' should be used to query the given lookup path.
     """
-    if sys.version_info.major < 3:
-        field_name = lookup_path.split(b'__', 1)[0]
-        field = opts.get_field_by_name(str(field_name))[0]
-    else:
-        field_name = bytes(lookup_path, 'utf-8').split(b'__', 1)[0]
-        field = opts.get_field_by_name(str(field_name, 'utf-8'))[0]
+    field_name = lookup_path.split('__', 1)[0]
+    field = opts.get_field(field_name)
     if ((hasattr(field, 'rel') and
          isinstance(field.rel, models.ManyToManyRel)) or
-        (isinstance(field, ForeignObjectRel) and
+        (is_related_field(field) and
          not field.field.unique)):
         return True
     return False
@@ -147,7 +124,7 @@ def quote(s):
     quoting is slightly different so that it doesn't get automatically
     unquoted by the Web browser.
     """
-    if not isinstance(s, str):
+    if not isinstance(s, basestring):
         return s
     res = list(s)
     for i in range(len(res)):
@@ -161,7 +138,7 @@ def unquote(s):
     """
     Undo the effects of quote(). Based heavily on urllib.unquote().
     """
-    if not isinstance(s, str):
+    if not isinstance(s, basestring):
         return s
     mychr = chr
     myatoi = int
@@ -193,51 +170,6 @@ def flatten_fieldsets(fieldsets):
     return field_names
 
 
-def get_deleted_objects(objs, opts, user, admin_site, using):
-    """
-    Find all objects related to ``objs`` that should also be deleted. ``objs``
-    must be a homogenous iterable of objects (e.g. a QuerySet).
-
-    Returns a nested list of strings suitable for display in the
-    template with the ``unordered_list`` filter.
-
-    """
-    collector = NestedObjects(using=using)
-    collector.collect(objs)
-    perms_needed = set()
-
-    def format_callback(obj):
-        has_admin = obj.__class__ in admin_site._registry
-        opts = obj._meta
-
-        if has_admin:
-            admin_url = reverse('%s:%s_%s_change'
-                                % (admin_site.name,
-                                   opts.app_label,
-                                   opts.object_name.lower()),
-                                None, (quote(obj._get_pk_val()),))
-            p = '%s.%s' % (opts.app_label,
-                           get_permission_codename('delete', opts))
-            if not user.has_perm(p):
-                perms_needed.add(opts.verbose_name)
-            # Display a link to the admin page.
-            return mark_safe(u'<span class="label label-info">%s:</span> <a href="%s">%s</a>' %
-                             (escape(capfirst(opts.verbose_name)),
-                              admin_url,
-                              escape(obj)))
-        else:
-            # Don't display link to edit, because it either has no
-            # admin or is edited inline.
-            return mark_safe(u'<span class="label label-info">%s:</span> %s' %
-                             (escape(capfirst(opts.verbose_name)),
-                              escape(obj)))
-
-    to_delete = collector.nested(format_callback)
-    protected = [format_callback(obj) for obj in collector.protected]
-
-    return to_delete, perms_needed, protected
-
-
 class NestedObjects(Collector):
     def __init__(self, *args, **kwargs):
         super(NestedObjects, self).__init__(*args, **kwargs)
@@ -249,13 +181,13 @@ class NestedObjects(Collector):
 
     def collect(self, objs, source_attr=None, **kwargs):
         for obj in objs:
-            if source_attr:
+            if source_attr and hasattr(obj, source_attr):
                 self.add_edge(getattr(obj, source_attr), obj)
             else:
                 self.add_edge(None, obj)
         try:
             return super(NestedObjects, self).collect(objs, source_attr=source_attr, **kwargs)
-        except models.ProtectedError as e:
+        except models.ProtectedError, e:
             self.protected.update(e.protected_objects)
 
     def related_objects(self, related, objs):
@@ -304,8 +236,8 @@ def model_format_dict(obj):
     else:
         opts = obj
     return {
-        'verbose_name': force_text(opts.verbose_name),
-        'verbose_name_plural': force_text(opts.verbose_name_plural)
+        'verbose_name': force_unicode(opts.verbose_name),
+        'verbose_name_plural': force_unicode(opts.verbose_name_plural)
     }
 
 
@@ -367,80 +299,6 @@ def lookup_field(name, obj, model_admin=None):
     return f, attr, value
 
 
-def label_for_field(name, model, model_admin=None, return_attr=False):
-    """
-    Returns a sensible label for a field name. The name can be a callable or the
-    name of an object attributes, as well as a genuine fields. If return_attr is
-    True, the resolved attribute (which could be a callable) is also returned.
-    This will be None if (and only if) the name refers to a field.
-    """
-    attr = None
-    try:
-        field = model._meta.get_field_by_name(name)[0]
-        if isinstance(field, ForeignObjectRel):
-            label = field.opts.verbose_name
-        else:
-            label = field.verbose_name
-    except models.FieldDoesNotExist:
-        if name == "__unicode__":
-            label = force_text(model._meta.verbose_name)
-            attr = unicode
-        elif name == "__str__":
-            label = smart_bytes(model._meta.verbose_name)
-            attr = str
-        else:
-            if callable(name):
-                attr = name
-            elif model_admin is not None and hasattr(model_admin, name):
-                attr = getattr(model_admin, name)
-            elif hasattr(model, name):
-                attr = getattr(model, name)
-            elif is_rel_field(name,model):
-                parts = name.split("__")
-                rel_name,name = parts[0],"__".join(parts[1:])
-                field = model._meta.get_field_by_name(rel_name)[0]
-                if isinstance(field, ForeignObjectRel):
-                    label = field.opts.verbose_name
-                else:
-                    label = field.verbose_name
-
-                rel_model = field.rel.to
-                rel_label = label_for_field(name, rel_model, model_admin=model_admin, return_attr=return_attr)
-
-                if return_attr:
-                    rel_label,attr = rel_label
-                    return ("%s %s"%(label,rel_label), attr)
-                else:
-                    return "%s %s"%(label,rel_label)
-            else:
-                message = "Unable to lookup '%s' on %s" % (
-                    name, model._meta.object_name)
-                if model_admin:
-                    message += " or %s" % (model_admin.__class__.__name__,)
-                raise AttributeError(message)
-
-            if hasattr(attr, "short_description"):
-                label = attr.short_description
-            elif callable(attr):
-                if attr.__name__ == "<lambda>":
-                    label = "--"
-                else:
-                    label = pretty_name(attr.__name__)
-            else:
-                label = pretty_name(name)
-    if return_attr:
-        return (label, attr)
-    else:
-        return label
-
-
-def help_text_for_field(name, model):
-    try:
-        help_text = model._meta.get_field_by_name(name)[0].help_text
-    except models.FieldDoesNotExist:
-        help_text = ""
-    return smart_text(help_text)
-
 
 def admin_urlname(value, arg):
     return 'xadmin:%s_%s_%s' % (value.app_label, value.model_name, arg)
@@ -451,65 +309,8 @@ def boolean_icon(field_val):
         {True: 'fa fa-check-circle text-success', False: 'fa fa-times-circle text-error', None: 'fa fa-question-circle muted'}[field_val], field_val))
 
 
-def collor_field(field_val):
-    format_str = """
-    <div class="sp-replacer sp-light sp-disabled">
-        <div class="sp-preview" style="margin-right: 0;">
-            <div class="sp-preview-inner" style="background-color: %s;"></div>
-        </div>
-    </div>
-    """
-    return mark_safe(format_str % field_val)
-
-
-def image_field(image, field, **kwargs):
-    if image:
-        if 'show_thumb' in kwargs and kwargs['show_thumb']:
-            label = label_for_field(field.name, field.model)
-            small = field.get_small(image)
-            medium = field.get_medium(image)
-            format_str = """
-            <a href="%s" target="_blank" title="%s" data-gallery="gallery" data-download="%s"><img src="%s" class="field_img"/></a>
-            """
-            return mark_safe(format_str % (medium.url, label, image.url, small.url))
-    return smart_text(image)
-
-
-def coordinates_field(value, field, model_admin):
-    if value:
-        import re
-        match = re.search(r"\((.*)\)", str(value))
-        lonlat = match.group(1).split( );
-        if model_admin:
-            inputs_str = ''
-            if field.show_in_map:
-                for item in field.show_in_map:
-                    try:
-                        inputs_str += '<input type="hidden" class="show_in_map" url="/%(app)s/%(model)s/inmap/%(field)s/" icon="%(icon)s" zoom="%(zoom)s" />' % item
-                    except:
-                        #TODO: raise error
-                        pass
-
-            format_str = """
-            <span id="id_%s" class="openstreetmap_view" style="width:100%%;height:350px;" point="%s" center="%s" zoom="%s">%s:%s%s</span>"""
-            options = (
-                field.name,
-                value,
-                settings.OSM_COORDINATES_CENTER if hasattr(settings, 'OSM_COORDINATES_CENTER') else '',
-                str(settings.OSM_COORDINATES_ZOOM) if hasattr(settings, 'OSM_COORDINATES_ZOOM') else '',
-                lonlat[1],
-                lonlat[0],
-                inputs_str
-            )
-            return mark_safe(format_str % (options))
-        else:
-            return "%s:%s" % (lonlat[1], lonlat[0])
-    return ''
-
-
-def display_for_field(value, field , model_admin=None, **kwargs):
+def display_for_field(value, field):
     from xadmin.views.list import EMPTY_CHANGELIST_VALUE
-    from xadmin.fields import ColorField, ImageWithThumbField
 
     if field.flatchoices:
         return dict(field.flatchoices).get(value, EMPTY_CHANGELIST_VALUE)
@@ -528,13 +329,9 @@ def display_for_field(value, field , model_admin=None, **kwargs):
     elif isinstance(field, models.FloatField):
         return formats.number_format(value)
     elif isinstance(field.rel, models.ManyToManyRel):
-        return ', '.join([smart_text(obj) for obj in value.all()])
-    elif isinstance(field, ColorField):
-        return collor_field(value)
-    elif isinstance(field, ImageWithThumbField):
-        return image_field(value, field, **kwargs)
+        return ', '.join([smart_unicode(obj) for obj in value.all()])
     else:
-        return smart_text(value)
+        return smart_unicode(value)
 
 
 def display_for_value(value, boolean=False):
@@ -551,17 +348,14 @@ def display_for_value(value, boolean=False):
     elif isinstance(value, (decimal.Decimal, float)):
         return formats.number_format(value)
     else:
-        return smart_text(value)
+        return smart_unicode(value)
 
 
 class NotRelationField(Exception):
     pass
 
-
 def get_model_from_relation(field):
-    if hasattr(field, 'related_model'):
-        return field.related_model
-    elif isinstance(field, ForeignObjectRel):
+    if is_related_field(field):
         return field.model
     elif getattr(field, 'rel'):  # or isinstance?
         return field.rel.to
@@ -582,7 +376,8 @@ def reverse_field_path(model, path):
     parent = model
     pieces = path.split(LOOKUP_SEP)
     for piece in pieces:
-        field, model, direct, m2m = parent._meta.get_field_by_name(piece)
+        field = parent._meta.get_field(piece)
+        direct = not field.auto_created or field.concrete
         # skip trailing data field if extant:
         if len(reversed_path) == len(pieces) - 1:  # final iteration
             try:
@@ -615,7 +410,7 @@ def get_fields_from_path(model, path):
             parent = get_model_from_relation(fields[-1])
         else:
             parent = model
-        fields.append(parent._meta.get_field_by_name(piece)[0])
+        fields.append(parent._meta.get_field(piece))
     return fields
 
 
@@ -647,7 +442,6 @@ def get_limit_choices_to_from_path(model, path):
     else:
         return models.Q(**limit_choices_to)  # convert dict to Q
 
-
 def sortkeypicker(keynames):
     negate = set()
     for i, k in enumerate(keynames):
@@ -661,3 +455,9 @@ def sortkeypicker(keynames):
                 composite[i] = -v
         return composite
     return getit
+
+def is_related_field(field):
+    return isinstance(field, ForeignObjectRel)
+
+def is_related_field2(field):
+    return (hasattr(field, 'rel') and field.rel!=None) or is_related_field(field)

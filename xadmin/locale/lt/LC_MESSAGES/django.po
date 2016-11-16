@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xadmin-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-25 02:30-0500\n"
+"POT-Creation-Date: 2016-07-20 13:28+0800\n"
 "PO-Revision-Date: 2013-11-20 10:21+0000\n"
 "Last-Translator: sshwsfc <sshwsfc@gmail.com>\n"
 "Language-Team: Lithuanian (http://www.transifex.com/projects/p/xadmin/"
@@ -19,418 +19,479 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
 "%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: filters.py:162 filters.py:194 filters.py:405 filters.py:491 filters.py:529
+#: adminx.py:19
+msgid "Admin Object"
+msgstr ""
+
+#: apps.py:11
+msgid "Administration"
+msgstr ""
+
+#: filters.py:159 filters.py:191 filters.py:407 filters.py:493 filters.py:531
 msgid "All"
-msgstr "Visi"
+msgstr ""
 
-#: filters.py:163 plugins/export.py:177
+#: filters.py:160 plugins/export.py:165
 msgid "Yes"
-msgstr "Taip"
+msgstr ""
 
-#: filters.py:164 plugins/export.py:177
+#: filters.py:161 plugins/export.py:165
 msgid "No"
-msgstr "Ne"
+msgstr ""
 
-#: filters.py:178
+#: filters.py:175
 msgid "Unknown"
-msgstr "Nežinoma"
+msgstr ""
 
-#: filters.py:269
+#: filters.py:267
 msgid "Any date"
-msgstr "Bet kokia data"
+msgstr ""
 
-#: filters.py:270
+#: filters.py:268
 msgid "Has date"
-msgstr "Turi datą"
+msgstr ""
 
-#: filters.py:273
+#: filters.py:271
 msgid "Has no date"
-msgstr "Neturi datos"
+msgstr ""
 
-#: filters.py:276 widgets.py:34
+#: filters.py:274 widgets.py:30
 msgid "Today"
-msgstr "Šiandien"
+msgstr ""
 
-#: filters.py:280
+#: filters.py:278
 msgid "Past 7 days"
-msgstr "Paskutinės 7 dienos"
+msgstr ""
 
-#: filters.py:284
+#: filters.py:282
 msgid "This month"
-msgstr "Šis mėnuo"
+msgstr ""
 
-#: filters.py:288
+#: filters.py:286
 msgid "This year"
-msgstr "Šie metai"
+msgstr ""
 
 #: forms.py:10
 msgid ""
 "Please enter the correct username and password for a staff account. Note "
 "that both fields are case-sensitive."
 msgstr ""
-"Prašome įvesti teisingą vartotojo vardą ir slaptažodį. Didžiosios ir "
-"mažosios raidės traktuojamos kaip skirtingi simboliai"
 
 #: forms.py:21
 msgid "Please log in again, because your session has expired."
-msgstr "Jūsų sesija baigėsi. Prašome prisijungti iš naujo."
+msgstr ""
 
 #: forms.py:41
 #, python-format
 msgid "Your e-mail address is not your username. Try '%s' instead."
 msgstr ""
-"Jūsų el. pašto adresas nėra jūsų vartotojo vardas. Pabandykite '%s' vietoje "
-"jo."
 
-#: models.py:58
+#: models.py:48
 msgid "Title"
-msgstr "Antraštė"
+msgstr ""
 
-#: models.py:59 models.py:98 models.py:117
+#: models.py:49 models.py:88 models.py:107 models.py:149
 msgid "user"
-msgstr "vartotojas"
+msgstr ""
 
-#: models.py:60
+#: models.py:50
 msgid "Url Name"
-msgstr "Url Adresas"
+msgstr ""
 
-#: models.py:62
+#: models.py:52
 msgid "Query String"
-msgstr "Užklausa"
+msgstr ""
 
-#: models.py:63
+#: models.py:53
 msgid "Is Shared"
-msgstr "Dalintis"
+msgstr ""
 
-#: models.py:76 plugins/bookmark.py:49 plugins/bookmark.py:178
+#: models.py:66 plugins/bookmark.py:50 plugins/bookmark.py:180
 msgid "Bookmark"
-msgstr "Žyma"
+msgstr ""
 
-#: models.py:77
+#: models.py:67
 msgid "Bookmarks"
-msgstr "Žymos"
+msgstr ""
 
-#: models.py:99
+#: models.py:89
 msgid "Settings Key"
-msgstr "Nustatymų raktas"
+msgstr ""
 
-#: models.py:100
+#: models.py:90
 msgid "Settings Content"
-msgstr "Nustatymų turinys"
+msgstr ""
 
-#: models.py:112
+#: models.py:102
 msgid "User Setting"
-msgstr "Vartotojo nustatymas"
+msgstr ""
 
-#: models.py:113
+#: models.py:103
 msgid "User Settings"
-msgstr "Vartotojo nustatymai"
+msgstr ""
 
-#: models.py:118
+#: models.py:108
 msgid "Page"
-msgstr "Puslapis"
+msgstr ""
 
-#: models.py:119 views/dashboard.py:85 views/dashboard.py:95
+#: models.py:109 views/dashboard.py:82 views/dashboard.py:92
 msgid "Widget Type"
-msgstr "Valdikio tipas"
+msgstr ""
 
-#: models.py:120 views/dashboard.py:86
+#: models.py:110 views/dashboard.py:83
 msgid "Widget Params"
-msgstr "Valdiklio parametrai"
+msgstr ""
 
-#: models.py:147
+#: models.py:137
 msgid "User Widget"
-msgstr "Vartotojo valdiklis"
+msgstr ""
 
-#: models.py:148
+#: models.py:138
 msgid "User Widgets"
-msgstr "Vartotojo valdikliai"
+msgstr ""
 
-#: plugins/actions.py:58
+#: models.py:142
+msgid "action time"
+msgstr ""
+
+#: models.py:151
+msgid "action ip"
+msgstr ""
+
+#: models.py:155
+msgid "content type"
+msgstr ""
+
+#: models.py:158
+msgid "object id"
+msgstr ""
+
+#: models.py:159
+msgid "object repr"
+msgstr ""
+
+#: models.py:160
+msgid "action flag"
+msgstr ""
+
+#: models.py:161
+msgid "change message"
+msgstr ""
+
+#: models.py:164
+msgid "log entry"
+msgstr ""
+
+#: models.py:165
+msgid "log entries"
+msgstr ""
+
+#: models.py:173
+#, python-format
+msgid "Added \"%(object)s\"."
+msgstr ""
+
+#: models.py:175
+#, python-format
+msgid "Changed \"%(object)s\" - %(changes)s"
+msgstr ""
+
+#: models.py:180
+#, python-format
+msgid "Deleted \"%(object)s.\""
+msgstr ""
+
+#: plugins/actions.py:57
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
-msgstr "Ištrinti pažymėtus %(verbose_name_plural)s"
+msgstr ""
 
-#: plugins/actions.py:71
+#: plugins/actions.py:72
+#, python-format
+msgid "Batch delete %(count)d %(items)s."
+msgstr ""
+
+#: plugins/actions.py:78
 #, python-format
 msgid "Successfully deleted %(count)d %(items)s."
-msgstr "Sėkmingai ištrinta %(count)d %(items)s."
+msgstr ""
 
-#: plugins/actions.py:103 views/delete.py:72
+#: plugins/actions.py:110 views/delete.py:70
 #, python-format
 msgid "Cannot delete %(name)s"
-msgstr "Negalima ištrinti %(name)s"
+msgstr ""
 
-#: plugins/actions.py:105 views/delete.py:75
+#: plugins/actions.py:112 views/delete.py:73
 msgid "Are you sure?"
-msgstr "Ar tikrai?"
+msgstr ""
 
-#: plugins/actions.py:151
+#: plugins/actions.py:158
 #, python-format
 msgid "%(total_count)s selected"
 msgid_plural "All %(total_count)s selected"
-msgstr[0] "%(total_count)s pažymėta"
-msgstr[1] "Visi %(total_count)s pažymėti"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: plugins/actions.py:155
+#: plugins/actions.py:162
 #, python-format
 msgid "0 of %(cnt)s selected"
-msgstr "0 iš %(cnt)s pažymėta"
+msgstr ""
 
-#: plugins/actions.py:172 plugins/actions.py:182
+#: plugins/actions.py:179 plugins/actions.py:189
 msgid ""
 "Items must be selected in order to perform actions on them. No items have "
 "been changed."
 msgstr ""
-"Kas nors turi būti pasirinkta norint atlikti pakeitimus. Šiuo metu nei "
-"vienas įrašas nėra pažymėtas."
 
 #: plugins/aggregation.py:14
 msgid "Min"
-msgstr "Min"
+msgstr ""
 
 #: plugins/aggregation.py:14
 msgid "Max"
-msgstr "Max"
+msgstr ""
 
 #: plugins/aggregation.py:14
 msgid "Avg"
-msgstr "Vidurkis"
+msgstr ""
 
 #: plugins/aggregation.py:14
 msgid "Sum"
-msgstr "Suma"
+msgstr ""
 
 #: plugins/aggregation.py:14
 msgid "Count"
-msgstr "Kiekis"
+msgstr ""
 
 #: plugins/auth.py:21
 #, python-format
 msgid "Can add %s"
-msgstr "Sukurti %s"
+msgstr ""
 
 #: plugins/auth.py:22
 #, python-format
 msgid "Can change %s"
-msgstr "Keisti %s"
+msgstr ""
 
 #: plugins/auth.py:23
 #, python-format
 msgid "Can edit %s"
-msgstr "Redaguoti %s"
+msgstr ""
 
 #: plugins/auth.py:24
 #, python-format
 msgid "Can delete %s"
-msgstr "Ištrinti %s"
+msgstr ""
 
 #: plugins/auth.py:25
 #, python-format
 msgid "Can view %s"
-msgstr "Peržiūrėti %s"
+msgstr ""
 
-#: plugins/auth.py:26
-#, python-format
-#| msgid "Can edit %s"
-msgid "Can export %s"
-msgstr "Eksportuoti %s"
-
-#: plugins/auth.py:88
+#: plugins/auth.py:87
 msgid "Personal info"
-msgstr "Asmeninė informacija"
+msgstr ""
 
-#: plugins/auth.py:92
+#: plugins/auth.py:91
 msgid "Permissions"
-msgstr "Leidimai"
+msgstr ""
 
-#: plugins/auth.py:95
+#: plugins/auth.py:94
 msgid "Important dates"
-msgstr "Svarbios datos"
+msgstr ""
 
-#: plugins/auth.py:100
+#: plugins/auth.py:99
 msgid "Status"
-msgstr "Statusas"
+msgstr ""
 
-#: plugins/auth.py:112
+#: plugins/auth.py:111
 msgid "Permission Name"
-msgstr "Leidimas"
+msgstr ""
 
-#: plugins/auth.py:162
+#: plugins/auth.py:167
 msgid "Change Password"
-msgstr "Keisti slaptažodį"
+msgstr ""
 
-#: plugins/auth.py:192
+#: plugins/auth.py:198
 #, python-format
 msgid "Change password: %s"
-msgstr "Keisti slaptažodį: %s"
+msgstr ""
 
-#: plugins/auth.py:217 plugins/auth.py:249
+#: plugins/auth.py:223 plugins/auth.py:255
 msgid "Password changed successfully."
-msgstr "Slaptažodis sėkmingai pakeistas."
+msgstr ""
 
-#: plugins/auth.py:236 templates/xadmin/auth/user/change_password.html:11
+#: plugins/auth.py:242 templates/xadmin/auth/user/change_password.html:11
 #: templates/xadmin/auth/user/change_password.html:22
 #: templates/xadmin/auth/user/change_password.html:55
 msgid "Change password"
-msgstr "Pakeisti slaptažodį"
+msgstr ""
 
-#: plugins/batch.py:48
+#: plugins/batch.py:44
 msgid "Change this field"
-msgstr "Pakeisti šį lauką"
+msgstr ""
 
-#: plugins/batch.py:69
+#: plugins/batch.py:65
 #, python-format
 msgid "Batch Change selected %(verbose_name_plural)s"
-msgstr "Pakeisti pasirinktus %(verbose_name_plural)s"
+msgstr ""
 
-#: plugins/batch.py:92
+#: plugins/batch.py:89
 #, python-format
 msgid "Successfully change %(count)d %(items)s."
-msgstr "Sėkmingai pakeista %(count)d %(items)s."
+msgstr ""
 
-#: plugins/batch.py:140
+#: plugins/batch.py:138
 #, python-format
 msgid "Batch change %s"
-msgstr "Pakeisti %s"
+msgstr ""
 
-#: plugins/bookmark.py:171
+#: plugins/bookmark.py:173
 msgid "bookmark"
-msgstr "žyma"
+msgstr ""
 
-#: plugins/bookmark.py:174
+#: plugins/bookmark.py:176
 msgid "Bookmark Widget, can show user's bookmark list data in widget."
-msgstr "Rodo lentelę pagal pasirinktą žymą."
+msgstr ""
 
-#: plugins/chart.py:29
+#: plugins/chart.py:25
 msgid "Show models simple chart."
-msgstr "Rodo paprastą objekto grafiką."
+msgstr ""
 
-#: plugins/chart.py:55
+#: plugins/chart.py:51
 #, python-format
 msgid "%s Charts"
-msgstr "%s grafikai"
+msgstr ""
 
 #: plugins/comments.py:33
 msgid "Metadata"
-msgstr "Meta duomenys"
+msgstr ""
 
 #: plugins/comments.py:60
 msgid "flagged"
 msgid_plural "flagged"
-msgstr[0] "pažymėtas"
-msgstr[1] "pažymėti"
-msgstr[2] "pažymėti"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: plugins/comments.py:61
 msgid "Flag selected comments"
-msgstr "Pažymėti pasirinktus komentarus"
+msgstr ""
 
 #: plugins/comments.py:66
 msgid "approved"
 msgid_plural "approved"
-msgstr[0] "patvirtintas"
-msgstr[1] "patvirtinti"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: plugins/comments.py:67
 msgid "Approve selected comments"
-msgstr "Patvirtinti pasirinktus komentarus"
+msgstr ""
 
 #: plugins/comments.py:72
 msgid "removed"
 msgid_plural "removed"
-msgstr[0] "pašalintas"
-msgstr[1] "pašalinti"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: plugins/comments.py:73
 msgid "Remove selected comments"
-msgstr "Pašalinti pasirinktus komentarus"
+msgstr ""
 
 #: plugins/comments.py:86
 #, python-format
 msgid "1 comment was successfully %(action)s."
 msgid_plural "%(count)s comments were successfully %(action)s."
-msgstr[0] "1 komentaras buvo sėkmingai %(action)s."
-msgstr[1] "%(count)s komentarai buvo sėkmingai %(action)s."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: plugins/details.py:52 views/list.py:580
+#: plugins/details.py:52 views/list.py:578
 #, python-format
 msgid "Details of %s"
-msgstr "%s peržiūra"
+msgstr ""
 
-#: plugins/editable.py:52
+#: plugins/editable.py:46
 #, python-format
 msgid "Enter %s"
-msgstr "Įveskite %s"
+msgstr ""
 
-#: plugins/editable.py:79 views/dashboard.py:652 views/delete.py:30
-#: views/detail.py:148 views/edit.py:432
+#: plugins/editable.py:73 views/dashboard.py:649 views/delete.py:27
+#: views/detail.py:145 views/edit.py:454
 #, python-format
 msgid "%(name)s object with primary key %(key)r does not exist."
-msgstr "%(name)s objektas neegzistuoja. Objekto 'primary key': %(key)r"
+msgstr ""
 
-#: plugins/export.py:107 plugins/export.py:147
+#: plugins/export.py:98 plugins/export.py:135
 msgid "Sheet"
-msgstr "Lapas"
+msgstr ""
 
-#: plugins/filters.py:136 plugins/quickfilter.py:140
+#: plugins/filters.py:133 plugins/quickfilter.py:141
 #, python-format
 msgid "<b>Filtering error:</b> %s"
-msgstr "<b>Filtravimo klaida:</b> %s"
+msgstr ""
 
 #: plugins/images.py:29
 msgid "Previous"
-msgstr "Ankstesnis"
+msgstr ""
 
 #: plugins/images.py:29
 msgid "Next"
-msgstr "Sekantis"
+msgstr ""
 
 #: plugins/images.py:29
 msgid "Slideshow"
-msgstr "Skaidrių peržiūra"
+msgstr ""
 
 #: plugins/images.py:29
 msgid "Download"
-msgstr "Parsisiųsti"
+msgstr ""
 
 #: plugins/images.py:50
 msgid "Change:"
-msgstr "Keisti"
+msgstr ""
 
-#: plugins/layout.py:15
+#: plugins/layout.py:16
 msgid "Table"
-msgstr "Lentelė"
+msgstr ""
 
-#: plugins/layout.py:21
+#: plugins/layout.py:22
 msgid "Thumbnails"
-msgstr "Miniatiūros"
+msgstr ""
 
 #: plugins/passwords.py:64
 msgid "Forgotten your password or username?"
-msgstr "Pamiršote savo slaptažodį ar vartotojo vardą?"
+msgstr ""
 
-#: plugins/quickform.py:77
+#: plugins/quickform.py:79
 #, python-format
 msgid "Create New %s"
-msgstr "Sukurti naują %s"
+msgstr ""
 
-#: plugins/relate.py:79
+#: plugins/relate.py:104
 msgid "Related Objects"
-msgstr "Susiję objektai"
+msgstr ""
 
-#: plugins/relfield.py:29 plugins/topnav.py:35
+#: plugins/relfield.py:29 plugins/topnav.py:38
 #, python-format
 msgid "Search %s"
-msgstr "Ieškoti %s"
+msgstr ""
+
+#: plugins/relfield.py:67
+#, python-format
+msgid "Select %s"
+msgstr ""
 
 #: plugins/themes.py:47
 msgid "Default"
-msgstr "Numatytoji Tema"
+msgstr ""
 
 #: plugins/themes.py:48
 msgid "Default bootstrap theme"
-msgstr "Numatytoji bootstrap tema"
+msgstr ""
 
 #: plugins/themes.py:49
 msgid "Bootstrap2"
@@ -438,108 +499,105 @@ msgstr ""
 
 #: plugins/themes.py:49
 msgid "Bootstrap 2.x theme"
-msgstr "Bootstrap 2.x tema"
+msgstr ""
 
-#: plugins/topnav.py:60 views/dashboard.py:469 views/edit.py:365
-#: views/edit.py:374
+#: plugins/topnav.py:62 views/dashboard.py:465 views/edit.py:387
+#: views/edit.py:396
 #, python-format
 msgid "Add %s"
-msgstr "Sukurti %s"
+msgstr ""
 
-#: plugins/xversion.py:146
+#: plugins/xversion.py:106
 msgid "Initial version."
-msgstr "Pradinė versija."
+msgstr ""
 
-#: plugins/xversion.py:148
+#: plugins/xversion.py:108
 msgid "Change version."
-msgstr "Pakeisti versiją."
+msgstr ""
 
-#: plugins/xversion.py:150
+#: plugins/xversion.py:110
 msgid "Revert version."
-msgstr "Sugrąžinti versiją."
+msgstr ""
 
-#: plugins/xversion.py:152
+#: plugins/xversion.py:112
 msgid "Rercover version."
-msgstr "Atstatyti versiją."
+msgstr ""
 
-#: plugins/xversion.py:154
+#: plugins/xversion.py:114
 #, python-format
 msgid "Deleted %(verbose_name)s."
-msgstr "Ištrinta %(verbose_name)s."
+msgstr ""
 
-#: plugins/xversion.py:182 templates/xadmin/views/recover_form.html:26
+#: plugins/xversion.py:127 templates/xadmin/views/recover_form.html:26
 msgid "Recover"
-msgstr "Atstatyti"
+msgstr ""
 
-#: plugins/xversion.py:198 templates/xadmin/views/model_history.html:11
+#: plugins/xversion.py:143 templates/xadmin/views/model_history.html:11
 #: templates/xadmin/views/revision_diff.html:11
 #: templates/xadmin/views/revision_form.html:15
 msgid "History"
-msgstr "Istorija"
+msgstr ""
 
-#: plugins/xversion.py:241 templates/xadmin/views/recover_form.html:14
+#: plugins/xversion.py:194 templates/xadmin/views/recover_form.html:14
 #: templates/xadmin/views/recover_list.html:10
 #, python-format
 msgid "Recover deleted %(name)s"
-msgstr "Atstatyti ištrintus %(name)s"
+msgstr ""
 
-#: plugins/xversion.py:279
+#: plugins/xversion.py:238
 #, python-format
 msgid "Change history: %s"
-msgstr "Pakeitimų istorija: %s"
+msgstr ""
 
-#: plugins/xversion.py:329
+#: plugins/xversion.py:288
 msgid "Must select two versions."
-msgstr "Turite pasirinkti dvi versijas."
+msgstr ""
 
-#: plugins/xversion.py:337
+#: plugins/xversion.py:296
 msgid "Please select two different versions."
-msgstr "Prašom pasirinkti dvi skirtingas versijas."
+msgstr ""
 
-#: plugins/xversion.py:424 plugins/xversion.py:532
+#: plugins/xversion.py:383 plugins/xversion.py:500
 #, python-format
 msgid "Current: %s"
-msgstr "Dabartinė: %s"
+msgstr ""
 
-#: plugins/xversion.py:456
+#: plugins/xversion.py:424
 #, python-format
 msgid "Revert %s"
-msgstr "Sugrąžinti %s"
+msgstr ""
 
-#: plugins/xversion.py:472
+#: plugins/xversion.py:440
 #, python-format
 msgid ""
 "The %(model)s \"%(name)s\" was reverted successfully. You may edit it again "
 "below."
 msgstr ""
-"%(model)s \"%(name)s\" buvo sėkmingai sugrąžintas. Galite jį toliau "
-"redaguoti."
 
-#: plugins/xversion.py:493
+#: plugins/xversion.py:461
 #, python-format
 msgid "Recover %s"
-msgstr "Atstatyti %s"
+msgstr ""
 
-#: plugins/xversion.py:509
+#: plugins/xversion.py:477
 #, python-format
 msgid ""
 "The %(model)s \"%(name)s\" was recovered successfully. You may edit it again "
 "below."
 msgstr ""
-"%(model)s \"%(name)s\" atstatytas sėkmingai. Galite jį toliau redaguoti."
 
-#: templates/xadmin/404.html:4 templates/xadmin/404.html.py:8
+#: templates/xadmin/404.html:4 templates/xadmin/404.html:8
 msgid "Page not found"
-msgstr "Puslapis nerastas"
+msgstr ""
 
 #: templates/xadmin/404.html:10
 msgid "We're sorry, but the requested page could not be found."
-msgstr "Apgailestaujame, bet tokio puslapio nėra."
+msgstr ""
 
 #: templates/xadmin/500.html:7
 #: templates/xadmin/auth/user/change_password.html:10
 #: templates/xadmin/auth/user/change_password.html:15
-#: templates/xadmin/base_site.html:54
+#: templates/xadmin/base_site.html:53
 #: templates/xadmin/includes/sitemenu_default.html:7
 #: templates/xadmin/views/app_index.html:9
 #: templates/xadmin/views/batch_change_form.html:9
@@ -550,80 +608,70 @@ msgstr "Apgailestaujame, bet tokio puslapio nėra."
 #: templates/xadmin/views/recover_form.html:8
 #: templates/xadmin/views/recover_list.html:8
 #: templates/xadmin/views/revision_diff.html:8
-#: templates/xadmin/views/revision_form.html:8 views/base.py:460
+#: templates/xadmin/views/revision_form.html:8 views/base.py:473
 msgid "Home"
-msgstr "Namai"
+msgstr ""
 
 #: templates/xadmin/500.html:8
 msgid "Server error"
-msgstr "Serverio klaida"
+msgstr ""
 
 #: templates/xadmin/500.html:12
 msgid "Server error (500)"
-msgstr "Serverio klaida (500)"
+msgstr ""
 
 #: templates/xadmin/500.html:15
 msgid "Server Error <em>(500)</em>"
-msgstr "Serverio klaida <em>(500)</em>"
+msgstr ""
 
 #: templates/xadmin/500.html:16
 msgid ""
 "There's been an error. It's been reported to the site administrators via e-"
 "mail and should be fixed shortly. Thanks for your patience."
 msgstr ""
-"Įvyko klaida. Apie tai pranešta svetainės administratoriams ir netrukus "
-"turėtų būti pataisyta. Dėkojame už jūsų kantrybę."
 
 #: templates/xadmin/auth/password_reset/complete.html:11
 #: templates/xadmin/auth/password_reset/done.html:11
 msgid "Password reset successful"
-msgstr "Slaptažodis sėkmingai atstatytas"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/complete.html:14
 msgid "Your password has been set.  You may go ahead and log in now."
 msgstr ""
-"Jūsų slaptažodis buvo nustatytas iš naujo. Dabar galite prisijungti su "
-"naujuoju slaptažodžiu."
 
 #: templates/xadmin/auth/password_reset/complete.html:15
 msgid "Log in"
-msgstr "Prisijungti"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/confirm.html:12
 msgid "Enter new password"
-msgstr "Įveskite naują slaptažodį"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/confirm.html:17
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
 msgstr ""
-"Prašom įrašyti naują slaptažodį antrą kartą, kad galėtume patikrinti, ar jį "
-"parašėte teisigai."
 
 #: templates/xadmin/auth/password_reset/confirm.html:19
 msgid "Change my password"
-msgstr "Pakeisti mano slaptažodį"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/confirm.html:24
 msgid "Password reset unsuccessful"
-msgstr "Slaptažodžio atkūrimas nepavyko"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/confirm.html:27
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
 msgstr ""
-"Slaptažodžio atstatymo nuoroda negaliojanti, greičiausiai ji jau buvo "
-"panaudota anksčiau. Pabandykite inicijuoti slaptažodžio atstatymą iš naujo."
 
 #: templates/xadmin/auth/password_reset/done.html:14
 msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
 msgstr ""
-"Išsiuntėme Jums el. laišką su tolimesnėmis slaptažodžio atstatymo nuorodomis "
-"Turėtumėte gauti jį netrukus."
 
 #: templates/xadmin/auth/password_reset/email.html:2
 #, python-format
@@ -631,57 +679,51 @@ msgid ""
 "You're receiving this e-mail because you requested a password reset for your "
 "user account at %(site_name)s."
 msgstr ""
-"Sveiki! Jūs gavote šį pranešimą nes svetainėje %(site_name)s inicijavote "
-"savo paskyros slaptažodžio atstatymą."
 
 #: templates/xadmin/auth/password_reset/email.html:4
 msgid "Please go to the following page and choose a new password:"
-msgstr "Prašome eiti žemiau nurodytu adresu ir susikurti naują slaptažodį."
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/email.html:8
 msgid "Your username, in case you've forgotten:"
-msgstr "Jūsų vartotojo vardas, jei netyčia jį užmiršote:"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/email.html:10
 msgid "Thanks for using our site!"
-msgstr "Dėkojame, kad naudojatės mūsų svetaine!"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/email.html:12
 #, python-format
 msgid "The %(site_name)s team"
-msgstr "%(site_name)s komanda"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/form.html:13
 msgid "Password reset"
-msgstr "Slaptažodžio atstatymas"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/form.html:17
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
 msgstr ""
-"Pamiršote slaptažodį? Įveskite savo el. pašto adresą ir mes išsiųsime "
-"nurodymus kaip nustatyti naują slaptažodį."
 
 #: templates/xadmin/auth/password_reset/form.html:25
 msgid "E-mail address:"
-msgstr "El. pašto adresas:"
+msgstr ""
 
 #: templates/xadmin/auth/password_reset/form.html:33
 msgid "Reset my password"
-msgstr "Atstatyti mano slaptažodį"
+msgstr ""
 
 #: templates/xadmin/auth/user/add_form.html:6
 msgid ""
 "First, enter a username and password. Then, you'll be able to edit more user "
 "options."
 msgstr ""
-"Įveskite naudotojo vardą ir slaptažodį. Tada galėsite keisti daugiau "
-"vartotojo nustatymų."
 
 #: templates/xadmin/auth/user/add_form.html:8
 msgid "Enter a username and password."
-msgstr "Įveskite vartotojo vardą ir slaptažodį."
+msgstr ""
 
 #: templates/xadmin/auth/user/change_password.html:31
 #: templates/xadmin/views/batch_change_form.html:24
@@ -689,170 +731,175 @@ msgstr "Įveskite vartotojo vardą ir slaptažodį."
 #: templates/xadmin/views/model_form.html:20
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
-msgstr[0] "Prašome ištaisyti žemiau esančią klaidą."
-msgstr[1] "Prašome ištaisyti žemiau esančias klaidas."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: templates/xadmin/auth/user/change_password.html:38
 msgid "Enter your new password."
-msgstr "Įveskite savo naują slaptažodį"
+msgstr ""
 
 #: templates/xadmin/auth/user/change_password.html:40
 #, python-format
 msgid "Enter a new password for the user <strong>%(username)s</strong>."
-msgstr "Įveskite naują slaptažodį vartotojui <strong>%(username)s</strong>."
+msgstr ""
 
-#: templates/xadmin/base_site.html:19
+#: templates/xadmin/base_site.html:18
 msgid "Welcome,"
-msgstr "Sveiki,"
+msgstr ""
 
-#: templates/xadmin/base_site.html:25
+#: templates/xadmin/base_site.html:24
 msgid "Log out"
-msgstr "Atsijungti"
+msgstr ""
 
-#: templates/xadmin/base_site.html:37
+#: templates/xadmin/base_site.html:36
 msgid "You don't have permission to edit anything."
-msgstr "Jūs neturite leidimų redaguoti."
+msgstr ""
 
 #: templates/xadmin/blocks/comm.top.theme.html:4
 msgid "Themes"
-msgstr "Temos"
+msgstr ""
 
-#: templates/xadmin/blocks/comm.top.topnav.html:8
+#: templates/xadmin/blocks/comm.top.topnav.html:9
+#: templates/xadmin/blocks/model_list.nav_form.search_form.html:8
 #: templates/xadmin/filters/char.html:7
 #: templates/xadmin/filters/fk_search.html:7
-#: templates/xadmin/filters/fk_search.html:14
+#: templates/xadmin/filters/fk_search.html:16
 #: templates/xadmin/filters/number.html:7
 msgid "Search"
-msgstr "Ieškoti"
+msgstr ""
 
-#: templates/xadmin/blocks/comm.top.topnav.html:22
+#: templates/xadmin/blocks/comm.top.topnav.html:23
 msgid "Add"
-msgstr "Sukurti"
+msgstr ""
 
 #: templates/xadmin/blocks/model_form.submit_line.wizard.html:9
 #: templates/xadmin/blocks/model_form.submit_line.wizard.html:26
 msgid "Prev step"
-msgstr "Ankstesnis žingsnis"
+msgstr ""
 
 #: templates/xadmin/blocks/model_form.submit_line.wizard.html:13
 #: templates/xadmin/blocks/model_form.submit_line.wizard.html:29
 msgid "Next step"
-msgstr "Sekantisis žingsnis"
+msgstr ""
 
 #: templates/xadmin/blocks/model_form.submit_line.wizard.html:15
 #: templates/xadmin/blocks/model_form.submit_line.wizard.html:31
 #: templates/xadmin/includes/submit_line.html:10
 #: templates/xadmin/includes/submit_line.html:13
-#: templates/xadmin/views/form.html:30
+#: templates/xadmin/views/form.html:30 templates/xadmin/views/form.html:31
 msgid "Save"
-msgstr "Išsaugoti"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.nav_menu.bookmarks.html:7
 msgid "Clean Bookmarks"
-msgstr "Išvalyti žymas"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.nav_menu.bookmarks.html:18
 msgid "No Bookmarks"
-msgstr "Nėra žymų"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.nav_menu.bookmarks.html:22
 msgid "New Bookmark"
-msgstr "Nauja žyma"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.nav_menu.bookmarks.html:26
 msgid "Save current page as Bookmark"
-msgstr "Išsaugoti šį puslapį kaip žymą"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.nav_menu.bookmarks.html:32
 msgid "Enter bookmark title"
-msgstr "Suteikite žymai vardą"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.nav_menu.bookmarks.html:33
 msgid "Waiting"
-msgstr "Laukiam"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.nav_menu.bookmarks.html:33
 msgid "Save Bookmark"
-msgstr "Išsaugoti žymą"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.nav_menu.filters.html:4
 msgid "Filters"
-msgstr "Filtrai"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.nav_menu.filters.html:8
 msgid "Clean Filters"
-msgstr "Išvalyti filtrus"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:19
 msgid "Click here to select the objects across all pages"
-msgstr "Pasirinkti objektus iš visų puslapių"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:19
 #, python-format
-msgid "Select all %(total_count)s %(module_name)s"
-msgstr "Pasirinkti visus %(total_count)s %(module_name)s"
+msgid "Select all %(total_count)s %(model_name)s"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.results_bottom.actions.html:20
 msgid "Clear selection"
-msgstr "Išvalyti pasirinkimą"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.results_top.charts.html:4
 msgid "Charts"
-msgstr "Grafikai"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:4
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:8
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:19
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:47
 msgid "Export"
-msgstr "Eksportuoti"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:26
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:29
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:32
 msgid "Export with table header."
-msgstr "Eksportuoti su lentelės antrašte."
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:35
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:38
 msgid "Export with format."
-msgstr "Eksportuoti formatais."
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:42
-#| msgid "Export all datas."
 msgid "Export all data."
-msgstr "Eksportuoti visas eilutes."
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.top_toolbar.exports.html:46
 #: templates/xadmin/widgets/base.html:41
 msgid "Close"
-msgstr "Uždaryti"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.top_toolbar.layouts.html:4
 msgid "Layout"
-msgstr "Išdėstymas"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.top_toolbar.refresh.html:8
 msgid "Clean Refresh"
-msgstr "Išvalyti Filtrus"
+msgstr ""
 
 #: templates/xadmin/blocks/model_list.top_toolbar.refresh.html:14
 #, python-format
 msgid "Every %(t)s seconds"
-msgstr "Kas %(t)s sekundžių"
+msgstr ""
 
-#: templates/xadmin/edit_inline/blank.html:5 views/detail.py:26
-#: views/edit.py:104 views/list.py:32
+#: templates/xadmin/blocks/model_list.top_toolbar.saveorder.html:4
+msgid "Save Order"
+msgstr ""
+
+#: templates/xadmin/edit_inline/blank.html:5 views/detail.py:23
+#: views/edit.py:102 views/list.py:29
 msgid "Null"
-msgstr "Nėra"
+msgstr ""
 
 #: templates/xadmin/filters/char.html:13
 msgid "Enter"
-msgstr "Įveskite"
+msgstr ""
 
 #: templates/xadmin/filters/date.html:10 templates/xadmin/filters/date.html:13
 msgid "Choice Date"
-msgstr "Pasirinkite datą"
+msgstr ""
 
 #: templates/xadmin/filters/date.html:18
 msgid "YY"
@@ -860,7 +907,7 @@ msgstr ""
 
 #: templates/xadmin/filters/date.html:19
 msgid "year"
-msgstr "metai"
+msgstr ""
 
 #: templates/xadmin/filters/date.html:22
 msgid "MM"
@@ -868,7 +915,7 @@ msgstr ""
 
 #: templates/xadmin/filters/date.html:23
 msgid "month"
-msgstr "mėnuo"
+msgstr ""
 
 #: templates/xadmin/filters/date.html:26
 msgid "DD"
@@ -876,136 +923,137 @@ msgstr ""
 
 #: templates/xadmin/filters/date.html:27
 msgid "day"
-msgstr "diena"
+msgstr ""
 
 #: templates/xadmin/filters/date.html:29 templates/xadmin/filters/date.html:46
 #: templates/xadmin/filters/date.html:54
-#: templates/xadmin/filters/fk_search.html:16
+#: templates/xadmin/filters/fk_search.html:24
 #: templates/xadmin/filters/number.html:37
 msgid "Apply"
-msgstr "Taikyti keitimus"
+msgstr ""
 
 #: templates/xadmin/filters/date.html:34
 msgid "Date Range"
-msgstr "Datos intervalas"
+msgstr ""
 
 #: templates/xadmin/filters/date.html:41
 msgid "Select Date"
-msgstr "Pasirinkite datą"
-
-#: templates/xadmin/filters/datetime.html:38
-msgid "Select Date And Time"
-msgstr "Pasirinkite datą ir laiką"
+msgstr ""
 
 #: templates/xadmin/filters/date.html:42
 msgid "From"
-msgstr "Nuo"
+msgstr ""
 
 #: templates/xadmin/filters/date.html:44
 msgid "To"
-msgstr "Iki"
+msgstr ""
 
-#: templates/xadmin/filters/fk_search.html:18
+#: templates/xadmin/filters/fk_search.html:14
+msgid "Select"
+msgstr ""
+
+#: templates/xadmin/filters/fk_search.html:26
 #: templates/xadmin/filters/number.html:39
 msgid "Clean"
-msgstr "Išvalyti"
+msgstr ""
 
 #: templates/xadmin/filters/number.html:17
 #: templates/xadmin/filters/number.html:25
 #: templates/xadmin/filters/number.html:33
 msgid "Enter Number"
-msgstr "Įveskite skaičių"
+msgstr ""
 
 #: templates/xadmin/filters/rel.html:3
 #, python-format
 msgid " By %(filter_title)s "
-msgstr " Pagal %(filter_title)s "
+msgstr ""
 
 #: templates/xadmin/forms/transfer.html:4
 msgid "Available"
-msgstr "Galimi"
+msgstr ""
 
 #: templates/xadmin/forms/transfer.html:12
 msgid "Click to choose all at once."
-msgstr "Pasirinkti visus iš karto."
+msgstr ""
 
 #: templates/xadmin/forms/transfer.html:12
 msgid "Choose all"
-msgstr "Pasirinkti visus"
+msgstr ""
 
 #: templates/xadmin/forms/transfer.html:16
 msgid "Choose"
-msgstr "Pasirinkti"
+msgstr ""
 
 #: templates/xadmin/forms/transfer.html:19
 #: templates/xadmin/widgets/base.html:40
 msgid "Remove"
-msgstr "Pašalinti"
+msgstr ""
 
 #: templates/xadmin/forms/transfer.html:23
 msgid "Chosen"
-msgstr "Pasirinkti"
+msgstr ""
 
 #: templates/xadmin/forms/transfer.html:27
 msgid "Click to remove all chosen at once."
-msgstr "Pašalinti visus pasirinktus iš karto."
+msgstr ""
 
 #: templates/xadmin/forms/transfer.html:27
 msgid "Remove all"
-msgstr "Pašalinti visus"
+msgstr ""
 
 #: templates/xadmin/includes/pagination.html:9
 msgid "Show all"
-msgstr "Rodyti visus"
+msgstr ""
 
 #: templates/xadmin/includes/submit_line.html:10
 #: templates/xadmin/includes/submit_line.html:13
-#: templates/xadmin/views/form.html:30
+#: templates/xadmin/views/form.html:30 templates/xadmin/views/form.html:31
 msgid "Saving.."
-msgstr "Saugojama.."
+msgstr ""
 
 #: templates/xadmin/includes/submit_line.html:17
 msgid "Save as new"
-msgstr "Išsaugoti kaip naują"
+msgstr ""
 
 #: templates/xadmin/includes/submit_line.html:18
 msgid "Save and add another"
-msgstr "Išsaugoti ir sukurti dar vieną"
+msgstr ""
 
 #: templates/xadmin/includes/submit_line.html:19
 msgid "Save and continue editing"
-msgstr "Išsaugoti ir tęsti redavimą"
+msgstr ""
 
 #: templates/xadmin/includes/submit_line.html:24
-#: templates/xadmin/views/model_detail.html:28 views/delete.py:95
+#: templates/xadmin/views/model_detail.html:28 views/delete.py:93
 msgid "Delete"
-msgstr "Ištrinti"
+msgstr ""
 
 #: templates/xadmin/views/app_index.html:13
 #, python-format
 msgid "%(name)s"
-msgstr "%(name)s"
+msgstr ""
 
 #: templates/xadmin/views/batch_change_form.html:11
 msgid "Change multiple objects"
-msgstr "Keisti keletą objektų"
+msgstr ""
 
 #: templates/xadmin/views/batch_change_form.html:16
 #, python-format
 msgid "Change one %(objects_name)s"
 msgid_plural "Batch change %(counter)s %(objects_name)s"
-msgstr[0] "Keisti vieną %(objects_name)s"
-msgstr[1] "Keisti %(counter)s %(objects_name)s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: templates/xadmin/views/batch_change_form.html:38
 msgid "Change Multiple"
-msgstr "Keisti keletą"
+msgstr ""
 
 #: templates/xadmin/views/dashboard.html:15
 #: templates/xadmin/views/dashboard.html:22
 #: templates/xadmin/views/dashboard.html:23
 msgid "Add Widget"
-msgstr "Sukurti valdiklį"
+msgstr ""
 
 #: templates/xadmin/views/invalid_setup.html:13
 msgid ""
@@ -1013,46 +1061,43 @@ msgid ""
 "database tables have been created, and make sure the database is readable by "
 "the appropriate user."
 msgstr ""
-"Kažkas yra negerai su jūsų duomenų bazės instaliacija. Įsitikinkite, kad "
-"visos reikalingos lentelės sukurtos ir vartotojas turi teises skaityti "
-"duomenų bazę."
 
 #: templates/xadmin/views/logged_out.html:16
 msgid "Logout Success"
-msgstr "Atsijungta"
+msgstr ""
 
 #: templates/xadmin/views/logged_out.html:17
 msgid "Thanks for spending some quality time with the Web site today."
-msgstr "Ačiū, kad naudojatės."
+msgstr ""
 
 #: templates/xadmin/views/logged_out.html:19
 msgid "Close Window"
-msgstr "Uždaryti langą"
+msgstr ""
 
 #: templates/xadmin/views/logged_out.html:20
 msgid "Log in again"
-msgstr "Prisijungti iš naujo"
+msgstr ""
 
 #: templates/xadmin/views/login.html:39 views/website.py:38
 msgid "Please Login"
-msgstr "Prašome Prisijungti"
+msgstr ""
 
 #: templates/xadmin/views/login.html:52
 msgid "Username"
-msgstr "Vartotojas"
+msgstr ""
 
 #: templates/xadmin/views/login.html:64
 msgid "Password"
-msgstr "Slaptažodis"
+msgstr ""
 
 #: templates/xadmin/views/login.html:75
 msgid "log in"
-msgstr "prisijungti"
+msgstr ""
 
 #: templates/xadmin/views/model_dashboard.html:26
 #: templates/xadmin/views/model_detail.html:25
 msgid "Edit"
-msgstr "Redaguoti"
+msgstr ""
 
 #: templates/xadmin/views/model_delete_confirm.html:11
 #, python-format
@@ -1061,8 +1106,6 @@ msgid ""
 "related objects, but your account doesn't have permission to delete the "
 "following types of objects:"
 msgstr ""
-"Trinant %(verbose_name)s '%(escaped_object)s' tektų ištrinti susijusius "
-"objektus tačiau Jūs neturite teisių trinti šių tipų objektus:"
 
 #: templates/xadmin/views/model_delete_confirm.html:19
 #, python-format
@@ -1070,8 +1113,6 @@ msgid ""
 "Deleting the %(verbose_name)s '%(escaped_object)s' would require deleting "
 "the following protected related objects:"
 msgstr ""
-"Trinant %(verbose_name)s '%(escaped_object)s' bus ištrinti ir šie susiję "
-"apsaugoti objektai:"
 
 #: templates/xadmin/views/model_delete_confirm.html:27
 #, python-format
@@ -1079,22 +1120,20 @@ msgid ""
 "Are you sure you want to delete the %(verbose_name)s \"%(escaped_object)s\"? "
 "All of the following related items will be deleted:"
 msgstr ""
-"Ar tikrai norite ištrinti %(verbose_name)s \"%(escaped_object)s\"? Visi "
-"susiję objektai bus ištrinti:"
 
 #: templates/xadmin/views/model_delete_confirm.html:34
 #: templates/xadmin/views/model_delete_selected_confirm.html:49
 msgid "Yes, I'm sure"
-msgstr "Taip, esu įsitikinęs"
+msgstr ""
 
 #: templates/xadmin/views/model_delete_confirm.html:35
 #: templates/xadmin/views/model_delete_selected_confirm.html:50
 msgid "Cancel"
-msgstr "Atšaukti"
+msgstr ""
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:10
 msgid "Delete multiple objects"
-msgstr "Ištrinti keletą objektų"
+msgstr ""
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:18
 #, python-format
@@ -1103,8 +1142,6 @@ msgid ""
 "objects, but your account doesn't have permission to delete the following "
 "types of objects:"
 msgstr ""
-"Trinant %(objects_name)s tektų ištrinti susijusius objektus tačiau Jūs "
-"neturite teisių trinti šių tipų objektus:"
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:26
 #, python-format
@@ -1112,7 +1149,6 @@ msgid ""
 "Deleting the selected %(objects_name)s would require deleting the following "
 "protected related objects:"
 msgstr ""
-"Trinant pasirinktus %(objects_name)s bus ištrinti apsaugoti susiję objektai:"
 
 #: templates/xadmin/views/model_delete_selected_confirm.html:34
 #, python-format
@@ -1120,267 +1156,263 @@ msgid ""
 "Are you sure you want to delete the selected %(objects_name)s? All of the "
 "following objects and their related items will be deleted:"
 msgstr ""
-"Ar tikrai norite ištrinti pasirinktus %(objects_name)s? Visi sekantys "
-"objektai bus ištrinti:"
 
 #: templates/xadmin/views/model_history.html:26
 msgid "Diff"
-msgstr "Skirtumas"
+msgstr ""
 
 #: templates/xadmin/views/model_history.html:27
 #: templates/xadmin/views/recover_list.html:25
 msgid "Date/time"
-msgstr "Data/laikas"
+msgstr ""
 
 #: templates/xadmin/views/model_history.html:28
 msgid "User"
-msgstr "Vartotojas"
+msgstr ""
 
 #: templates/xadmin/views/model_history.html:29
 msgid "Comment"
-msgstr "Komentaras"
+msgstr ""
 
 #: templates/xadmin/views/model_history.html:54
 msgid "Diff Select Versions"
-msgstr "Pasirinktų versijų skirtumas"
+msgstr ""
 
 #: templates/xadmin/views/model_history.html:58
 msgid ""
 "This object doesn't have a change history. It probably wasn't added via this "
 "admin site."
 msgstr ""
-"Objektas neturi pakeitimų istorijos. Greičiausiai jis nebuvo įdėtas per šią "
-"administravimo aplinką."
 
 #: templates/xadmin/views/model_list.html:29
 #, python-format
 msgid "Add %(name)s"
-msgstr "Sukurti %(name)s"
+msgstr ""
 
 #: templates/xadmin/views/model_list.html:39
 msgid "Columns"
-msgstr "Stulpeliai"
+msgstr ""
 
 #: templates/xadmin/views/model_list.html:42
 msgid "Restore Selected"
-msgstr "Atstatyti numatytuosius"
+msgstr ""
 
 #: templates/xadmin/views/model_list.html:147
 #: templates/xadmin/widgets/list.html:33
 msgid "Empty list"
-msgstr "Sąrašas tuščias"
+msgstr ""
 
 #: templates/xadmin/views/recover_form.html:20
 msgid "Press the recover button below to recover this version of the object."
-msgstr "Spauskite atstatymo mygtuką, jei norite atstatyti šio objekto versiją."
+msgstr ""
 
 #: templates/xadmin/views/recover_list.html:19
 msgid ""
 "Choose a date from the list below to recover a deleted version of an object."
 msgstr ""
-"Pasirinkite datą iš sąrašo, jei norite atstatyti objekto ištrintą versiją"
 
 #: templates/xadmin/views/recover_list.html:39
 msgid "There are no deleted objects to recover."
-msgstr "Nėra ištrintų objektų, kuriuos būtų galima atstatyti."
+msgstr ""
 
 #: templates/xadmin/views/revision_diff.html:12
 #: templates/xadmin/views/revision_diff.html:17
 #, python-format
 msgid "Diff %(verbose_name)s"
-msgstr "Skirtumas %(verbose_name)s"
+msgstr ""
 
 #: templates/xadmin/views/revision_diff.html:25
 msgid "Field"
-msgstr "Laukelis"
+msgstr ""
 
 #: templates/xadmin/views/revision_diff.html:26
 msgid "Version A"
-msgstr "Versija A"
+msgstr ""
 
 #: templates/xadmin/views/revision_diff.html:27
 msgid "Version B"
-msgstr "Versija B"
+msgstr ""
 
 #: templates/xadmin/views/revision_diff.html:39
 msgid "Revert to"
-msgstr "Sugrąžinti į"
+msgstr ""
 
 #: templates/xadmin/views/revision_diff.html:40
 #: templates/xadmin/views/revision_diff.html:41
 msgid "Revert"
-msgstr "Sugrąžinti"
+msgstr ""
 
 #: templates/xadmin/views/revision_form.html:16
 #, python-format
 msgid "Revert %(verbose_name)s"
-msgstr "Sugrąžinti %(verbose_name)s"
+msgstr ""
 
 #: templates/xadmin/views/revision_form.html:21
 msgid "Press the revert button below to revert to this version of the object."
 msgstr ""
-"Spauskite sugrąžinimo mygtuką, jei norite sugrąžinti šią objekto versiją."
 
 #: templates/xadmin/views/revision_form.html:27
 msgid "Revert this revision"
-msgstr "Sugrąžinti šią reviziją"
+msgstr ""
 
 #: templates/xadmin/widgets/addform.html:14
 msgid "Success"
-msgstr "Pavyko"
+msgstr ""
 
 #: templates/xadmin/widgets/addform.html:14
 msgid "Add success, click <a id='change-link'>edit</a> to edit."
-msgstr "Sukurti pavyko, galite <a id='change-link'>redaguoti</a>."
+msgstr ""
 
 #: templates/xadmin/widgets/addform.html:17
 msgid "Quick Add"
-msgstr "Greitai sukurti"
+msgstr ""
 
 #: templates/xadmin/widgets/base.html:31
 msgid "Widget Options"
-msgstr "Valdiklio nustatymai"
+msgstr ""
 
 #: templates/xadmin/widgets/base.html:42
 msgid "Save changes"
-msgstr "Išsaugoti pakeitimus"
-
-#: views/base.py:442
-msgid "Control Panel"
 msgstr ""
 
-#: views/dashboard.py:189
+#: views/base.py:315
+msgid "Django Xadmin"
+msgstr ""
+
+#: views/base.py:316
+msgid "my-company.inc"
+msgstr ""
+
+#: views/dashboard.py:186
 msgid "Widget ID"
-msgstr "Valdiklio ID"
+msgstr ""
 
-#: views/dashboard.py:190
+#: views/dashboard.py:187
 msgid "Widget Title"
-msgstr "Valdiklio antraštė"
+msgstr ""
 
-#: views/dashboard.py:253
+#: views/dashboard.py:252
 msgid "Html Content Widget, can write any html content in widget."
-msgstr "Galite rašyti bet kokį HTML kodą."
+msgstr ""
 
-#: views/dashboard.py:256
+#: views/dashboard.py:255
 msgid "Html Content"
-msgstr "Html kodas"
+msgstr ""
 
-#: views/dashboard.py:319
+#: views/dashboard.py:318
 msgid "Target Model"
-msgstr "Modelis"
+msgstr ""
 
-#: views/dashboard.py:370
-msgid "quick button"
-msgstr "greitasis mygtukas"
+#: views/dashboard.py:369
+msgid "Quick button Widget, quickly open any page."
+msgstr ""
 
 #: views/dashboard.py:371
-msgid "Quick button Widget, quickly open any page."
-msgstr "Greitai atidarykite bet kokį puslapį."
-
-#: views/dashboard.py:373
 msgid "Quick Buttons"
-msgstr "Greitieji mygtukai"
+msgstr ""
 
-#: views/dashboard.py:418
-msgid "list"
-msgstr "sąrašas"
-
-#: views/dashboard.py:419
+#: views/dashboard.py:416
 msgid "Any Objects list Widget."
-msgstr "Bet kokio modelio objektų sąrašas."
+msgstr ""
 
-#: views/dashboard.py:459
-msgid "addform"
-msgstr "forma"
-
-#: views/dashboard.py:460
+#: views/dashboard.py:456
 msgid "Add any model object Widget."
-msgstr "Bet kokio modelio objektų kūrimo forma."
+msgstr ""
 
-#: views/dashboard.py:495
+#: views/dashboard.py:492
 msgid "Dashboard"
-msgstr "Valdymo pultas"
+msgstr ""
 
-#: views/dashboard.py:636
+#: views/dashboard.py:633
 #, python-format
 msgid "%s Dashboard"
-msgstr "%s Valdymo pultas"
+msgstr ""
 
-#: views/delete.py:105
+#: views/delete.py:103
 #, python-format
 msgid "The %(name)s \"%(obj)s\" was deleted successfully."
-msgstr "%(name)s \"%(obj)s\" buvo sėkmingai ištrintas."
+msgstr ""
 
-#: views/detail.py:176 views/edit.py:203 views/form.py:76
+#: views/detail.py:173 views/edit.py:211 views/form.py:72
 msgid "Other Fields"
-msgstr "Kiti laukeliai"
+msgstr ""
 
-#: views/detail.py:237
+#: views/detail.py:235
 #, python-format
 msgid "%s Detail"
-msgstr "%s informacija"
+msgstr ""
 
-#: views/edit.py:398
+#: views/edit.py:253
+msgid "Added."
+msgstr ""
+
+#: views/edit.py:255
+#, python-format
+msgid "Changed %s."
+msgstr ""
+
+#: views/edit.py:255
+msgid "and"
+msgstr ""
+
+#: views/edit.py:258
+msgid "No fields changed."
+msgstr ""
+
+#: views/edit.py:420
 #, python-format
 msgid "The %(name)s \"%(obj)s\" was added successfully."
-msgstr "%(name)s \"%(obj)s\" buvo sukurtas sėkmingai."
+msgstr ""
 
-#: views/edit.py:403 views/edit.py:498
+#: views/edit.py:425 views/edit.py:520
 msgid "You may edit it again below."
-msgstr "Galite toliau redaguoti"
+msgstr ""
 
-#: views/edit.py:407 views/edit.py:501
+#: views/edit.py:429 views/edit.py:523
 #, python-format
 msgid "You may add another %s below."
-msgstr "Galite sukurti naują %s"
+msgstr ""
 
-#: views/edit.py:449
+#: views/edit.py:471
 #, python-format
 msgid "Change %s"
-msgstr "Keisti %s"
+msgstr ""
 
-#: views/edit.py:494
+#: views/edit.py:516
 #, python-format
 msgid "The %(name)s \"%(obj)s\" was changed successfully."
-msgstr "%(name)s \"%(obj)s\" buvo pakeistas sėkmingai."
+msgstr ""
 
-#: views/form.py:168
+#: views/form.py:165
 #, python-format
 msgid "The %s was changed successfully."
-msgstr "%s buvo pakeistas sėkmingai."
+msgstr ""
 
-#: views/list.py:202
+#: views/list.py:199
 msgid "Database error"
-msgstr "Duomenų bazės klaida"
+msgstr ""
 
-#: views/list.py:376
+#: views/list.py:373
 #, python-format
 msgid "%s List"
-msgstr "%s sąrašas"
+msgstr ""
+
+#: views/list.py:499
+msgid "Sort ASC"
+msgstr ""
+
+#: views/list.py:500
+msgid "Sort DESC"
+msgstr ""
 
 #: views/list.py:504
-msgid "Sort ASC"
-msgstr "Rūšiuoti did. tvarka"
-
-#: views/list.py:505
-msgid "Sort DESC"
-msgstr "Rūšiuoti maž. tvarkta"
-
-#: views/list.py:509
 msgid "Cancel Sort"
-msgstr "Atšaukti rūšiavimą"
+msgstr ""
 
 #: views/website.py:16
 msgid "Main Dashboard"
-msgstr "Pagrindinis valdymo pultas"
+msgstr ""
 
-#: widgets.py:52
+#: widgets.py:48
 msgid "Now"
-msgstr "Dabar"
-
-#: widgets.py:165
-msgid "Choose file"
-msgstr "Pasirinkite failą"
-
-#~ msgid "chart"
-#~ msgstr "grafikas"
+msgstr ""

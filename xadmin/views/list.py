@@ -1,14 +1,11 @@
+from collections import OrderedDict
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import InvalidPage, Paginator
+from django.core.urlresolvers import NoReverseMatch
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.template.response import SimpleTemplateResponse, TemplateResponse
-from django.utils.datastructures import SortedDict
-import sys
-if sys.version_info.major < 3:
-   from django.utils.encoding import force_unicode as force_text, smart_unicode as smart_text
-else:
-   from django.utils.encoding import force_text, smart_text
+from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
@@ -16,7 +13,7 @@ from django.utils.translation import ugettext as _
 
 from xadmin.util import lookup_field, display_for_field, label_for_field, boolean_icon
 
-from xadmin.views.base import ModelAdminView, filter_hook, inclusion_tag, csrf_protect_m
+from base import ModelAdminView, filter_hook, inclusion_tag, csrf_protect_m
 
 # List settings
 ALL_VAR = 'all'
@@ -69,7 +66,7 @@ class ResultItem(object):
     def label(self):
         text = mark_safe(
             self.text) if self.allow_tags else conditional_escape(self.text)
-        if force_text(text) == '':
+        if force_unicode(text) == '':
             text = mark_safe('&nbsp;')
         for wrap in self.wraps:
             text = mark_safe(wrap % text)
@@ -109,7 +106,6 @@ class ListAdminView(ModelAdminView):
     list_per_page = 50
     list_max_show_all = 200
     list_exclude = ()
-    list_thumb_fields = []
     search_fields = ()
     paginator_class = Paginator
     ordering = None
@@ -191,11 +187,9 @@ class ListAdminView(ModelAdminView):
         self.multi_page = self.result_count > self.list_per_page
 
         # Get the list of objects to display on this page.
-        if self.list_per_page == 0 or (self.show_all and self.can_show_all) or not self.multi_page:
+        if (self.show_all and self.can_show_all) or not self.multi_page:
             self.result_list = self.list_queryset._clone()
         else:
-            if self.page_num >= self.paginator.num_pages:
-                self.page_num = 0
             try:
                 self.result_list = self.paginator.page(
                     self.page_num + 1).object_list
@@ -317,13 +311,13 @@ class ListAdminView(ModelAdminView):
     @filter_hook
     def get_ordering_field_columns(self):
         """
-        Returns a SortedDict of ordering field column numbers and asc/desc
+        Returns a OrderedDict of ordering field column numbers and asc/desc
         """
 
         # We must cope with more than one column having the same underlying sort
         # field, so we base things on column numbers.
         ordering = self._get_default_ordering()
-        ordering_fields = SortedDict()
+        ordering_fields = OrderedDict()
         if ORDER_VAR not in self.params or not self.params[ORDER_VAR]:
             # for ordering specified on ModelAdmin or model Meta, we don't know
             # the right column numbers absolutely, because there might be more
@@ -376,13 +370,12 @@ class ListAdminView(ModelAdminView):
         """
         Prepare the context for templates.
         """
-        self.title = _('%s List') % force_text(self.opts.verbose_name)
-
+        self.title = _('%s List') % force_unicode(self.opts.verbose_name)
         model_fields = [(f, f.name in self.list_display, self.get_check_field_url(f))
                         for f in (list(self.opts.fields) + self.get_model_method_fields()) if f.name not in self.list_exclude]
 
         new_context = {
-            'model_name': force_text(self.opts.verbose_name_plural),
+            'model_name': force_unicode(self.opts.verbose_name_plural),
             'title': self.title,
             'cl': self,
             'model_fields': model_fields,
@@ -417,9 +410,8 @@ class ListAdminView(ModelAdminView):
         context.update(kwargs or {})
 
         response = self.get_response(context, *args, **kwargs)
-
         return response or TemplateResponse(request, self.object_list_template or
-                                            self.get_template_list('views/model_list.html'), context, current_app=self.admin_site.name)
+                                            self.get_template_list('views/model_list.html'), context)
 
     @filter_hook
     def post_response(self, *args, **kwargs):
@@ -467,7 +459,7 @@ class ListAdminView(ModelAdminView):
         if field_name in ordering_field_columns:
             sorted = True
             order_type = ordering_field_columns.get(field_name).lower()
-            sort_priority = list(ordering_field_columns.keys()).index(field_name) + 1
+            sort_priority = ordering_field_columns.keys().index(field_name) + 1
             th_classes.append('sorted %sending' % order_type)
             new_order_type = {'asc': 'desc', 'desc': 'asc'}[order_type]
 
@@ -541,7 +533,7 @@ class ListAdminView(ModelAdminView):
         item = ResultItem(field_name, row)
         try:
             f, attr, value = lookup_field(field_name, obj, self)
-        except (AttributeError, ObjectDoesNotExist):
+        except (AttributeError, ObjectDoesNotExist, NoReverseMatch):
             item.text = mark_safe("<span class='text-muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
         else:
             if f is None:
@@ -551,7 +543,7 @@ class ListAdminView(ModelAdminView):
                     item.allow_tags = True
                     item.text = boolean_icon(value)
                 else:
-                    item.text = smart_text(value)
+                    item.text = smart_unicode(value)
             else:
                 if isinstance(f.rel, models.ManyToOneRel):
                     field_val = getattr(obj, f.name)
@@ -560,10 +552,7 @@ class ListAdminView(ModelAdminView):
                     else:
                         item.text = field_val
                 else:
-                    if f.name in self.list_thumb_fields:
-                        item.text = display_for_field(value, f, show_thumb=True)
-                    else:
-                        item.text = display_for_field(value, f)
+                    item.text = display_for_field(value, f)
                 if isinstance(f, models.DateField)\
                     or isinstance(f, models.TimeField)\
                         or isinstance(f, models.ForeignKey):
@@ -581,7 +570,10 @@ class ListAdminView(ModelAdminView):
             if self.list_display_links_details:
                 item_res_uri = self.model_admin_url("detail", getattr(obj, self.pk_attname))
                 if item_res_uri:
-                    edit_url = self.model_admin_url("change", getattr(obj, self.pk_attname))
+                    if self.has_change_permission(obj):
+                        edit_url = self.model_admin_url("change", getattr(obj, self.pk_attname))
+                    else:
+                        edit_url = ""
                     item.wraps.append('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s">%%s</a>'
                                      % (item_res_uri, edit_url, _(u'Details of %s') % str(obj)))
             else:

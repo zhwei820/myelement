@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 msgid ""
 msgstr ""
@@ -20,39 +20,39 @@ msgstr ""
 #: static/xadmin/js/xadmin.plugin.actions.js:20
 msgid "%(sel)s of %(cnt)s selected"
 msgid_plural "%(sel)s of %(cnt)s selected"
-msgstr[0] "%(sel)s iš %(cnt)s pasirinkta"
-msgstr[1] "%(sel)s iš %(cnt)s pasirinkta"
-msgstr[2] "%(sel)s iš %(cnt)s pasirinkta"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: static/xadmin/js/xadmin.plugin.revision.js:25
 msgid "New Item"
-msgstr "Naujas objektas"
+msgstr ""
 
 #: static/xadmin/js/xadmin.widget.datetime.js:32
 msgid "Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday"
-msgstr "Sekmadienis Pirmadienis Antradienis Trečiadienis Ketvirtadienis Penktadienis Šeštadienis"
+msgstr ""
 
 #: static/xadmin/js/xadmin.widget.datetime.js:33
 msgid "Sun Mon Tue Wed Thu Fri Sat Sun"
-msgstr "Sek Pir Ant Tre Ket Pen Šeš"
+msgstr ""
 
 #: static/xadmin/js/xadmin.widget.datetime.js:34
 msgid "Su Mo Tu We Th Fr Sa Su"
-msgstr "Se Pi An Tr Ke Pn Še"
+msgstr ""
 
 #: static/xadmin/js/xadmin.widget.datetime.js:35
 msgid ""
 "January February March April May June July August September October November"
 " December"
-msgstr "Sausis Vasaris Kovas Balandis Gegužė Birželis Liepa Rugpjūtis Spalis Lapkritis Gruodis"
+msgstr ""
 
 #: static/xadmin/js/xadmin.widget.datetime.js:36
 msgid "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec"
-msgstr "Sau Vas Kov Bal Geg Bir Lie Rugp Rugs Spa Lap Gru"
+msgstr ""
 
 #: static/xadmin/js/xadmin.widget.datetime.js:37
 msgid "Today"
-msgstr "Šiandien"
+msgstr ""
 
 #: static/xadmin/js/xadmin.widget.datetime.js:38
 msgid "%a %d %b %Y %T %Z"
@@ -69,28 +69,3 @@ msgstr ""
 #: static/xadmin/js/xadmin.widget.datetime.js:43
 msgid "%T"
 msgstr ""
-
-#: static/xadmin/js/xadmin.widget.colorpicker.js:8
-msgid "Cancel"
-msgstr "Atšaukti"
-
-#: static/xadmin/js/xadmin.widget.colorpicker.js:9
-msgid "Choose"
-msgstr "Pasirinkti"
-
-#: static/xadmin/js/xadmin.widget.opnestreetmap.js:115
-msgid "Enlarge"
-msgstr "Padidinti"
-
-#: static/xadmin/js/xadmin.plugin.details.js:24
-#: static/xadmin/js/xadmin.plugin.quick-form.js:172
-msgid "Close"
-msgstr "Uždaryti"
-
-#: static/xadmin/js/xadmin.plugin.details.js:25
-msgid "Edit"
-msgstr "Redaguoti"
-
-#: static/xadmin/js/xadmin.plugin.quick-form.js:173
-msgid "Add"
-msgstr "Pridėti"

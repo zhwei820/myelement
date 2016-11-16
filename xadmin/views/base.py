@@ -7,12 +7,8 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
-if sys.version_info.major < 3:
-  from django.utils.encoding import force_unicode as force_text
-  from django.utils.encoding import smart_unicode as smart_text
-else:
-  from django.utils.encoding import force_text
-  from django.utils.encoding import smart_text
+from django.utils.encoding import force_unicode, force_text
+from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_permission_codename
@@ -22,8 +18,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
-from django.utils.datastructures import SortedDict
 from django.utils.decorators import method_decorator, classonlymethod
+from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.http import urlencode
 from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
@@ -31,8 +27,10 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import View
+from collections import OrderedDict
 from xadmin.util import static, json, vendor, sortkeypicker
 
+from xadmin.models import Log
 
 csrf_protect_m = method_decorator(csrf_protect)
 
@@ -40,6 +38,9 @@ csrf_protect_m = method_decorator(csrf_protect)
 class IncorrectPluginArg(Exception):
     pass
 
+def get_content_type_for_model(obj):
+    from django.contrib.contenttypes.models import ContentType
+    return ContentType.objects.get_for_model(obj, for_concrete_model=False)
 
 def filter_chain(filters, token, func, *args, **kwargs):
     if token == -1:
@@ -88,21 +89,20 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
             from django.template.loader import get_template, select_template
             if isinstance(file_name, Template):
                 t = file_name
-            elif not isinstance(file_name, str) and is_iterable(file_name):
+            elif not isinstance(file_name, basestring) and is_iterable(file_name):
                 t = select_template(file_name)
             else:
                 t = get_template(file_name)
-            new_context = context_class(_dict, **{
-                'autoescape': context.autoescape,
-                'current_app': context.current_app,
-                'use_l10n': context.use_l10n,
-                'use_tz': context.use_tz,
-            })
-            new_context['admin_view'] = context['admin_view']
+
+            _dict['autoescape'] = context.autoescape
+            _dict['use_l10n'] = context.use_l10n
+            _dict['use_tz'] = context.use_tz
+            _dict['admin_view'] = context['admin_view']
+
             csrf_token = context.get('csrf_token', None)
             if csrf_token is not None:
-                new_context['csrf_token'] = csrf_token
-            nodes.append(t.render(new_context))
+                _dict['csrf_token'] = csrf_token
+            nodes.append(t.render(_dict))
 
         return method
     return wrap
@@ -120,7 +120,7 @@ class JSONEncoder(DjangoJSONEncoder):
             try:
                 return super(JSONEncoder, self).default(o)
             except Exception:
-                return smart_text(o)
+                return smart_unicode(o)
 
 
 class BaseAdminObject(object):
@@ -155,7 +155,7 @@ class BaseAdminObject(object):
             remove = []
         p = dict(self.request.GET.items()).copy()
         for r in remove:
-            for k in list(p):
+            for k in p.keys():
                 if k.startswith(r):
                     del p[k]
         for k, v in new_params.items():
@@ -173,7 +173,7 @@ class BaseAdminObject(object):
             remove = []
         p = dict(self.request.GET.items()).copy()
         for r in remove:
-            for k in list(p):
+            for k in p.keys():
                 if k.startswith(r):
                     del p[k]
         for k, v in new_params.items():
@@ -194,7 +194,7 @@ class BaseAdminObject(object):
         return HttpResponse(content)
 
     def template_response(self, template, context):
-        return TemplateResponse(self.request, template, context, current_app=self.admin_site.name)
+        return TemplateResponse(self.request, template, context)
 
     def message_user(self, message, level='info'):
         """
@@ -209,6 +209,19 @@ class BaseAdminObject(object):
 
     def vendor(self, *tags):
         return vendor(*tags)
+
+    def log(self, flag, message, obj=None):
+        log = Log(
+            user=self.user, 
+            ip_addr=self.request.META['REMOTE_ADDR'],
+            action_flag=flag,
+            message=message
+        )
+        if obj:
+            log.content_type = get_content_type_for_model(obj)
+            log.object_id = obj.pk
+            log.object_repr = force_text(obj)
+        log.save()
 
 
 class BaseAdminPlugin(BaseAdminObject):
@@ -299,8 +312,9 @@ class CommAdminView(BaseAdminView):
     base_template = 'xadmin/base_site.html'
     menu_template = 'xadmin/includes/sitemenu_default.html'
 
-    site_title = None
-    site_footer = None
+    site_title = getattr(settings,"XADMIN_TITLE",_(u"Django Xadmin"))
+    site_footer = getattr(settings,"XADMIN_FOOTER_TITLE",_(u"my-company.inc"))
+
     global_models_icon = {}
     default_model_icon = None
     apps_label_title = {}
@@ -322,7 +336,7 @@ class CommAdminView(BaseAdminView):
                     get_url(m, had_urls)
         get_url({'menus': site_menu}, had_urls)
 
-        nav_menu = SortedDict()
+        nav_menu = OrderedDict()
 
         for model, model_admin in self.admin_site._registry.items():
             if getattr(model_admin, 'hidden_menu', False):
@@ -330,7 +344,7 @@ class CommAdminView(BaseAdminView):
             app_label = model._meta.app_label
             app_icon = None
             model_dict = {
-                'title': capfirst(model._meta.verbose_name_plural),
+                'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
                 'icon': self.get_model_icon(model),
                 'perm': self.get_model_perm(model, 'view'),
@@ -344,19 +358,11 @@ class CommAdminView(BaseAdminView):
                 nav_menu[app_key]['menus'].append(model_dict)
             else:
                 # Find app title
-                app_title = app_label.title()
+                app_title = unicode(app_label.title())
                 if app_label.lower() in self.apps_label_title:
                     app_title = self.apps_label_title[app_label.lower()]
                 else:
-                    mods = model.__module__.split('.')
-                    if len(mods) > 1:
-                        mod = '.'.join(mods[0:-1])
-                        if mod in sys.modules:
-                            mod = sys.modules[mod]
-                            if 'verbose_name' in dir(mod):
-                                app_title = getattr(mod, 'verbose_name')
-                            elif 'app_title' in dir(mod):
-                                app_title = getattr(mod, 'app_title')
+                    app_title = unicode(apps.get_app_config(app_label).verbose_name)
                 #find app icon
                 if app_label.lower() in self.apps_icons:
                     app_icon = self.apps_icons[app_label.lower()]
@@ -379,7 +385,7 @@ class CommAdminView(BaseAdminView):
         for menu in nav_menu.values():
             menu['menus'].sort(key=sortkeypicker(['order', 'title']))
 
-        nav_menu = list(nav_menu.values())
+        nav_menu = nav_menu.values()
         nav_menu.sort(key=lambda x: x['title'])
 
         site_menu.extend(nav_menu)
@@ -417,7 +423,7 @@ class CommAdminView(BaseAdminView):
                 return item
 
             nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
-            nav_menu = list(filter(lambda x:x, nav_menu))
+            nav_menu = filter(lambda x:x, nav_menu)
 
             if not settings.DEBUG:
                 self.request.session['nav_menu'] = json.dumps(nav_menu)
@@ -445,8 +451,8 @@ class CommAdminView(BaseAdminView):
         context.update({
             'menu_template': self.menu_template,
             'nav_menu': nav_menu,
-            'site_title': self.site_title or _(u'Control Panel'),
-            'site_footer': self.site_footer or _(u'my-company.inc'),
+            'site_title': self.site_title,
+            'site_footer': self.site_footer,
             'breadcrumbs': self.get_breadcrumb()
         })
 
@@ -489,7 +495,7 @@ class ModelAdminView(CommAdminView):
             "opts": self.opts,
             "app_label": self.app_label,
             "model_name": self.model_name,
-            "verbose_name": force_text(self.opts.verbose_name),
+            "verbose_name": force_unicode(self.opts.verbose_name),
             'model_icon': self.get_model_icon(self.model),
         }
         context = super(ModelAdminView, self).get_context()
@@ -544,7 +550,6 @@ class ModelAdminView(CommAdminView):
             'add': self.has_add_permission(),
             'change': self.has_change_permission(),
             'delete': self.has_delete_permission(),
-            'export': self.has_export_permission(),
         }
 
     def get_template_list(self, template_name):
@@ -562,6 +567,7 @@ class ModelAdminView(CommAdminView):
         """
         return self.ordering or ()  # otherwise we might try to *None, which is bad ;)
 
+    @filter_hook
     def queryset(self):
         """
         Returns a QuerySet of all model instances that can be edited by the
@@ -587,77 +593,3 @@ class ModelAdminView(CommAdminView):
     def has_delete_permission(self, obj=None):
         codename = get_permission_codename('delete', self.opts)
         return ('delete' not in self.remove_permissions) and self.user.has_perm('%s.%s' % (self.app_label, codename))
-
-
-    def has_export_permission(self, obj=None):
-        return ('export' not in self.remove_permissions) and self.user.has_perm('%s.export_%s' % self.model_info)
-
-
-class AutocompleteView(BaseAdminView):
-    MAX_HINTS = 30
-
-    def __init__(self, request, *args, **kwargs):
-        self.request = request
-        self.request_method = request.method.lower()
-
-    def get(self, request, *args, **kwargs):
-        from xadmin.filters import SEARCH_VAR
-        query = self.request.GET.get(SEARCH_VAR, '')
-        field = kwargs['field']
-
-        if query:
-            if 'django.contrib.postgres' in settings.INSTALLED_APPS:
-                key = '__unaccent'
-            else:
-                key = ''
-
-            qargs = { '%s%s__istartswith' % (field, key): query, }
-            queryset = self.model._default_manager.filter( **qargs ).values(field) #.distinct()
-            content = {'options': [v[field] for v in queryset[:self.MAX_HINTS]], }
-        else:
-            content = []
-
-        response = HttpResponse(content_type="application/json; charset=UTF-8")
-        response.write(
-            json.dumps(content, cls=JSONEncoder, ensure_ascii=False))
-        return response
-
-
-class InMapView(BaseAdminView):
-
-    def __init__(self, request, *args, **kwargs):
-        self.request = request
-        self.request_method = request.method.lower()
-
-    def get(self, request, *args, **kwargs):
-        from django.contrib.gis import geos
-
-        field = kwargs['field']
-        x1 = request.GET.get('x1', None)
-        y1 = request.GET.get('y1', None)
-        x2 = request.GET.get('x2', None)
-        y2 = request.GET.get('y2', None)
-        content = []
-
-        bbox = (x1, y1, x2, y2)
-        geom = geos.Polygon.from_bbox(bbox)
-        qargs = { '%s__intersects' % field: geom, }
-        queryset = self.model.gis.filter( **qargs )
-        name_for_map = self.model._meta.get_field(field).name_for_map
-        for item in queryset:
-            location = getattr(item, field)
-            data = {'lon': location.coords[0], 'lat': location.coords[1], 'name': item.name};
-            if name_for_map:
-                name_for_map_value = getattr(item, name_for_map)
-                if callable(name_for_map_value):
-                    data['name'] = name_for_map_value()
-                else:
-                    data['name'] = name_for_map_value
-            else:
-                data['name'] = ''
-            content.append(data);
-
-        response = HttpResponse(content_type="application/json; charset=UTF-8")
-        response.write(
-            json.dumps(content, cls=JSONEncoder, ensure_ascii=False))
-        return response

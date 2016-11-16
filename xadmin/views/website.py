@@ -5,8 +5,8 @@ from django.contrib.auth.views import login
 from django.contrib.auth.views import logout
 from django.http import HttpResponse
 
-from xadmin.views.base import BaseAdminView, filter_hook
-from xadmin.views.dashboard import Dashboard
+from base import BaseAdminView, filter_hook
+from dashboard import Dashboard
 from xadmin.forms import AdminAuthenticationForm
 from xadmin.models import UserSettings
 from xadmin.layout import FormHelper
@@ -48,6 +48,7 @@ class LoginView(BaseAdminView):
         context = self.get_context()
         helper = FormHelper()
         helper.form_tag = False
+        helper.include_media = False
         context.update({
             'title': self.title,
             'helper': helper,

@@ -1,18 +1,16 @@
-import sys
-if sys.version_info.major < 3:
-   import StringIO
-   from django.utils.encoding import force_unicode as force_text, smart_unicode as smart_text
-else:
-   from io import BytesIO, StringIO
-   from django.utils.encoding import force_text, smart_text
+import StringIO
 import datetime
+import sys
 
 from django.http import HttpResponse
 from django.template import loader
+from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.xmlutils import SimplerXMLGenerator
 from django.db.models import BooleanField, NullBooleanField
+
+from xadmin.plugins.utils import get_context_dict
 from xadmin.sites import site
 from xadmin.views import BaseAdminPlugin, ListAdminView
 from xadmin.util import json
@@ -38,8 +36,6 @@ class ExportMenuPlugin(BaseAdminPlugin):
                     'xml': 'XML', 'json': 'JSON'}
 
     def init_request(self, *args, **kwargs):
-        if not self.has_model_perm(self.model, 'export'):
-            return False;
         self.list_export = [
             f for f in self.list_export
             if (f != 'xlsx' or has_xlsxwriter) and (f != 'xls' or has_xlwt)]
@@ -51,7 +47,8 @@ class ExportMenuPlugin(BaseAdminPlugin):
                 'form_params': self.admin_view.get_form_params({'_do_': 'export'}, ('export_type',)),
                 'export_types': [{'type': et, 'name': self.export_names[et]} for et in self.list_export],
             })
-            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.exports.html', context_instance=context))
+            nodes.append(loader.render_to_string('xadmin/blocks/model_list.top_toolbar.exports.html',
+                                                 context=get_context_dict(context)))
 
 
 class ExportPlugin(BaseAdminPlugin):
@@ -61,12 +58,9 @@ class ExportPlugin(BaseAdminPlugin):
                     'xml': 'application/xhtml+xml', 'json': 'application/json'}
 
     def init_request(self, *args, **kwargs):
-        if not self.has_model_perm(self.model, 'export'):
-            return False;
         return self.request.GET.get('_do_') == 'export'
 
     def _format_value(self, o):
-        value = None
         if (o.field is None and getattr(o.attr, 'boolean', False)) or \
            (o.field and isinstance(o.field, (BooleanField, NullBooleanField))):
                 value = o.value
@@ -81,7 +75,7 @@ class ExportPlugin(BaseAdminPlugin):
         rows = context['results']
 
         return [dict([
-            (force_text(headers[i].text), self._format_value(o)) for i, o in
+            (force_unicode(headers[i].text), self._format_value(o)) for i, o in
             enumerate(filter(lambda c:getattr(c, 'export', False), r.cells))]) for r in rows]
 
     def _get_datas(self, context):
@@ -89,22 +83,19 @@ class ExportPlugin(BaseAdminPlugin):
 
         new_rows = [[self._format_value(o) for o in
             filter(lambda c:getattr(c, 'export', False), r.cells)] for r in rows]
-        new_rows.insert(0, [force_text(c.text) for c in context['result_headers'].cells if c.export])
+        new_rows.insert(0, [force_unicode(c.text) for c in context['result_headers'].cells if c.export])
         return new_rows
 
     def get_xlsx_export(self, context):
         datas = self._get_datas(context)
-        if sys.version_info.major < 3:
-            output = StringIO.StringIO()
-        else:
-            output = BytesIO()
+        output = StringIO.StringIO()
         export_header = (
             self.request.GET.get('export_xlsx_header', 'off') == 'on')
 
         model_name = self.opts.verbose_name
         book = xlsxwriter.Workbook(output)
         sheet = book.add_worksheet(
-            u"%s %s" % (_(u'Sheet'), force_text(model_name)))
+            u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
         styles = {'datetime': book.add_format({'num_format': 'yyyy-mm-dd hh:mm:ss'}),
                   'date': book.add_format({'num_format': 'yyyy-mm-dd'}),
                   'time': book.add_format({'num_format': 'hh:mm:ss'}),
@@ -134,17 +125,14 @@ class ExportPlugin(BaseAdminPlugin):
 
     def get_xls_export(self, context):
         datas = self._get_datas(context)
-        if sys.version_info.major < 3:
-            output = StringIO.StringIO()
-        else:
-            output = BytesIO()
+        output = StringIO.StringIO()
         export_header = (
             self.request.GET.get('export_xls_header', 'off') == 'on')
 
         model_name = self.opts.verbose_name
         book = xlwt.Workbook(encoding='utf8')
         sheet = book.add_sheet(
-            u"%s %s" % (_(u'Sheet'), force_text(model_name)))
+            u"%s %s" % (_(u'Sheet'), force_unicode(model_name)))
         styles = {'datetime': xlwt.easyxf(num_format_str='yyyy-mm-dd hh:mm:ss'),
                   'date': xlwt.easyxf(num_format_str='yyyy-mm-dd'),
                   'time': xlwt.easyxf(num_format_str='hh:mm:ss'),
@@ -176,7 +164,7 @@ class ExportPlugin(BaseAdminPlugin):
         if isinstance(t, bool):
             return _('Yes') if t else _('No')
         t = t.replace('"', '""').replace(',', '\,')
-        if isinstance(t, str):
+        if isinstance(t, basestring):
             t = '"%s"' % t
         return t
 
@@ -199,20 +187,17 @@ class ExportPlugin(BaseAdminPlugin):
                 self._to_xml(xml, item)
                 xml.endElement("row")
         elif isinstance(data, dict):
-            for key, value in data.items():
+            for key, value in data.iteritems():
                 key = key.replace(' ', '_')
                 xml.startElement(key, {})
                 self._to_xml(xml, value)
                 xml.endElement(key)
         else:
-            xml.characters(smart_text(data))
+            xml.characters(smart_unicode(data))
 
     def get_xml_export(self, context):
         results = self._get_objects(context)
-        if sys.version_info.major < 3:
-            stream = StringIO.StringIO()
-        else:
-            stream = StringIO()
+        stream = StringIO.StringIO()
 
         xml = SimplerXMLGenerator(stream, "utf-8")
         xml.startDocument()
@@ -245,7 +230,7 @@ class ExportPlugin(BaseAdminPlugin):
     # View Methods
     def get_result_list(self, __):
         if self.request.GET.get('all', 'off') == 'on':
-            self.admin_view.list_per_page = 0
+            self.admin_view.list_per_page = sys.maxint
         return __()
 
     def result_header(self, item, field_name, row):

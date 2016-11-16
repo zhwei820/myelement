@@ -5,11 +5,7 @@ from django.db import models
 from django.core.exceptions import PermissionDenied
 from django.forms.models import modelform_factory
 from django.template.response import TemplateResponse
-import sys
-if sys.version_info.major < 3:
-   from django.utils.encoding import force_unicode as force_text
-else:
-   from django.utils.encoding import force_text
+from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, ugettext_lazy
 from xadmin.layout import FormHelper, Layout, Fieldset, Container, Col
@@ -20,14 +16,13 @@ from xadmin.views.edit import ModelFormAdminView
 
 BATCH_CHECKBOX_NAME = '_batch_change_fields'
 
+
 class ChangeFieldWidgetWrapper(forms.Widget):
 
     def __init__(self, widget):
         self.needs_multipart_form = widget.needs_multipart_form
         self.attrs = widget.attrs
         self.widget = widget
-        if hasattr(widget, 'input_type'):
-            self.input_type = widget.input_type
 
     def __deepcopy__(self, memo):
         obj = copy.copy(self)
@@ -79,7 +74,8 @@ class BatchChangeAction(BaseActionView):
         n = queryset.count()
 
         data = {}
-        for f in self.opts.fields:
+        fields = self.opts.fields + self.opts.many_to_many
+        for f in fields:
             if not f.editable or isinstance(f, models.AutoField) \
                     or not f.name in cleaned_data:
                 continue
@@ -126,15 +122,16 @@ class BatchChangeAction(BaseActionView):
 
         helper = FormHelper()
         helper.form_tag = False
+        helper.include_media = False
         helper.add_layout(Layout(Container(Col('full',
             Fieldset("", *self.form_obj.fields.keys(), css_class="unsort no_title"), horizontal=True, span=12)
         )))
         self.form_obj.helper = helper
         count = len(queryset)
         if count == 1:
-            objects_name = force_text(self.opts.verbose_name)
+            objects_name = force_unicode(self.opts.verbose_name)
         else:
-            objects_name = force_text(self.opts.verbose_name_plural)
+            objects_name = force_unicode(self.opts.verbose_name_plural)
 
         context = self.get_context()
         context.update({

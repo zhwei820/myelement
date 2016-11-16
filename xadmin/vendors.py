@@ -1,4 +1,4 @@
-from django.utils.translation import get_language
+
 vendors = {
     "bootstrap": {
         'js': {
@@ -15,11 +15,6 @@ vendors = {
                 'dev': 'xadmin/vendor/bootstrap/bootstrap-responsive.css',
                 'production': 'xadmin/vendor/bootstrap/bootstrap-responsive.css'
             }}
-    },
-    "diacritics": {
-        "js": {
-            'dev': 'xadmin/vendor/diacritics/diacritics.js',
-        }
     },
     'jquery': {
         "js": {
@@ -41,12 +36,6 @@ vendors = {
                            'xadmin/vendor/jquery-ui/jquery.ui.mouse.min.js', 'xadmin/vendor/jquery-ui/jquery.ui.sortable.min.js']
         }
     },
-    "filestyle": {
-        "js": {
-            'dev': 'xadmin/vendor/bootstrap-filestyle/js/bootstrap-filestyle.js',
-            'production': 'xadmin/vendor/bootstrap-filestyle/js/bootstrap-filestyle.min.js',
-        }
-    },
     "font-awesome": {
         "css": {
             'dev': 'xadmin/vendor/font-awesome/css/font-awesome.css',
@@ -63,25 +52,22 @@ vendors = {
             'production': 'xadmin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.min.js',
         }
     },
+    "clockpicker": {
+        "css": {
+            'dev': 'xadmin/vendor/bootstrap-clockpicker/bootstrap-clockpicker.css',
+            'production': 'xadmin/vendor/bootstrap-clockpicker/bootstrap-clockpicker.min.css',
+        },
+        "js": {
+            'dev': 'xadmin/vendor/bootstrap-clockpicker/bootstrap-clockpicker.js',
+            'production': 'xadmin/vendor/bootstrap-clockpicker/bootstrap-clockpicker.min.js',
+        }
+    },
     "datepicker": {
         "css": {
             'dev': 'xadmin/vendor/bootstrap-datepicker/css/datepicker.css'
         },
         "js": {
             'dev': 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js',
-        }
-    },
-    "datetimepicker": {
-        "css": {
-            'dev': 'xadmin/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css'
-        },
-        "js": {
-            'dev': 'xadmin/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
-        }
-    },
-    "moment": {
-        "js": {
-            'dev': ['xadmin/vendor/moment/js/moment.js', 'xadmin/vendor/moment/js/locale/%s.js' % get_language()],
         }
     },
     "flot": {
@@ -105,8 +91,8 @@ vendors = {
             'dev': ['xadmin/vendor/select2/select2.css', 'xadmin/vendor/selectize/selectize.css', 'xadmin/vendor/selectize/selectize.bootstrap3.css'],
         },
         "js": {
-            'dev': ['xadmin/vendor/selectize/selectize.js', 'xadmin/vendor/select2/select2.js'],
-            'production': ['xadmin/vendor/selectize/selectize.min.js', 'xadmin/vendor/select2/select2.min.js']
+            'dev': ['xadmin/vendor/selectize/selectize.js', 'xadmin/vendor/select2/select2.js', 'xadmin/vendor/select2/select2_locale_%(lang)s.js'],
+            'production': ['xadmin/vendor/selectize/selectize.min.js', 'xadmin/vendor/select2/select2.min.js', 'xadmin/vendor/select2/select2_locale_%(lang)s.js']
         }
     },
     "multiselect": {
@@ -117,33 +103,12 @@ vendors = {
             'dev': 'xadmin/vendor/bootstrap-multiselect/js/bootstrap-multiselect.js',
         }
     },
-    "typeahead": {
-        "js": {
-            'dev': 'xadmin/vendor/bootstrap-typeahead/js/bootstrap-typeahead.js',
-        }
-    },
     "snapjs": {
         "css": {
             'dev': 'xadmin/vendor/snapjs/snap.css',
         },
         "js": {
             'dev': 'xadmin/vendor/snapjs/snap.js',
-        }
-    },
-    "spectrum": {
-        "css": {
-            'dev': 'xadmin/vendor/spectrum/spectrum.css',
-        },
-        "js": {
-            'dev': 'xadmin/vendor/spectrum/spectrum.js',
-        }
-    },
-    "openlayers": {
-        "css": {
-            'dev': 'xadmin/vendor/openlayers/openlayers.css',
-        },
-        "js": {
-            'dev': 'xadmin/vendor/openlayers/OpenLayers.js',
         }
     },
 }
